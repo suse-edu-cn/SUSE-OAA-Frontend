@@ -8,6 +8,14 @@ export default defineConfig({
     plugins: [vue(), vueDevTools()],
     server: {
         port: 3011,
+        proxy: {
+            '/api': {
+                target: 'https://api.suseoaa.com',
+                changeOrigin: true,
+                secure: false,
+                rewrite: (path) => path.replace(/^\/api/, ''),
+            },
+        },
     },
     build: {
         assetsInlineLimit: 6144,
