@@ -16,7 +16,7 @@ onMounted(async () => {
 <template>
     <header>
         <div class="left">
-            <router-link to="/">OAAHub Frontend</router-link>
+            <router-link to="/">青蟹</router-link>
         </div>
         <div class="grow"></div>
         <div class="right">

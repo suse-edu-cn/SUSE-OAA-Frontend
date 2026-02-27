@@ -1,6 +1,6 @@
 <template>
     <footer>
-        <p>&copy; 2025 Project Explosion</p>
+        <p>&copy; 2025-2026 Explosion Production</p>
     </footer>
 </template>
 

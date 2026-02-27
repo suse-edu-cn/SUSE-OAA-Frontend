@@ -1,5 +1,5 @@
 {
-    "name": "oaahub-frontend",
+    "name": "suse-oaa-frontend",
     "version": "0.1.0",
     "private": true,
     "type": "module",
@@ -10,10 +10,10 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/suse-edu-cn/oaahub-frontend"
+        "url": "https://github.com/suse-edu-cn/SUSE-OAA-Frontend"
     },
     "bugs": {
-        "url": "https://github.com/suse-edu-cn/oaahub-frontend/issues"
+        "url": "https://github.com/suse-edu-cn/SUSE-OAA-Frontend/issues"
     },
     "engines": {
         "node": "^20.19.0 || >=22.12.0"
