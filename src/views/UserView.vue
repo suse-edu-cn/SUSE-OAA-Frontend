@@ -26,14 +26,17 @@ onMounted(async () => {
 
 <template>
     <!-- 如果登录状态正常，就显示包含信息的 banner -->
-    <div class="e-banner" style="background-color: var(--p-emerald-50);" v-if="authStore.isAuthed">
+    <div class="e-banner" style="background-color: var(--p-emerald-50)" v-if="authStore.isAuthed">
         <img :src="authStore.userInfo.avatar" alt="用户头像" srcset="" />
         <div class="info">
             <div class="title">{{ authStore.userInfo.username }}</div>
             <div class="subtitle">
                 <span class="left">
-                    <div>{{ authStore.userInfo.name }}&nbsp;·&nbsp;{{ authStore.userInfo.role }}&nbsp;·&nbsp;{{
-                        authStore.userInfo.department }}</div>
+                    <div>
+                        {{ authStore.userInfo.name }}&nbsp;·&nbsp;{{
+                            authStore.userInfo.role
+                        }}&nbsp;·&nbsp;{{ authStore.userInfo.department }}
+                    </div>
                     <div>
                         <span class="pi pi-users">&nbsp;{{ authStore.userInfo.student_id }}</span>
                     </div>
@@ -46,8 +49,9 @@ onMounted(async () => {
         </div>
     </div>
     <!-- 否则显示加载中骨架屏 -->
-    <div class="banner" style="background-color: var(--p-emerald-50);" v-else>
-        <Skeleton shape="circle" size="129px" /> <!-- 8rem + border -->
+    <div class="banner" style="background-color: var(--p-emerald-50)" v-else>
+        <Skeleton shape="circle" size="129px" />
+        <!-- 8rem + border -->
         <div class="info">
             <Skeleton class="title" width="12rem" height="2.25rem" />
             <div class="subtitle skeleton">
@@ -58,9 +62,7 @@ onMounted(async () => {
     </div>
 
     <main>
-        <div class="list">
-            测试信息
-        </div>
+        <div class="list">测试信息</div>
     </main>
 </template>
 
@@ -85,13 +87,13 @@ onMounted(async () => {
         .title {
             font-size: 2.25rem;
             font-weight: bold;
-            margin: .5rem var(--banner-h-margin) 1rem;
+            margin: 0.5rem var(--banner-h-margin) 1rem;
         }
 
         .subtitle {
             display: flex;
             flex-direction: var(--banner-direction);
-            gap: .5rem;
+            gap: 0.5rem;
             align-items: center;
             font-size: 1rem;
             line-height: 2;
@@ -113,7 +115,7 @@ onMounted(async () => {
         .subtitle.skeleton {
             display: flex;
             flex-direction: column;
-            gap: .5rem;
+            gap: 0.5rem;
             align-items: start;
         }
     }

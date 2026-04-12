@@ -21,7 +21,8 @@
         "preview": "vite preview",
         "lint": "eslint . --fix --cache",
         "prettier": "prettier --check src/",
-        "prettier:fix": "prettier --write src/"
+        "prettier:fix": "prettier --write src/",
+        "prepare": "husky install"
     },
     "dependencies": {
         "@primeuix/themes": "^2.0.3",
@@ -48,7 +49,11 @@
         "eslint": "^10.2.1",
         "eslint-plugin-vue": "~10.9.0",
         "globals": "^17.5.0",
-        "prettier": "3.8.3",
-        "vite-plugin-vue-devtools": "^8.1.1"
+        "husky": "^8.0.0",
+        "lint-staged": "^16.4.0",
+        "prettier": "3.8.3"
+    },
+    "lint-staged": {
+        "*.{js,ts,css,less,vue}": "prettier --write"
     }
 }

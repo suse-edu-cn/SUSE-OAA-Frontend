@@ -7,7 +7,7 @@
 <style>
 footer {
     text-align: center;
-    font-size: .9rem;
+    font-size: 0.9rem;
     padding: 1.25rem 0;
     border-top: 1px solid #ddd;
 

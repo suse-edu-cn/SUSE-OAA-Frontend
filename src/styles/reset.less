@@ -14,13 +14,16 @@
     --e-content-h-max-width: 1400px;
     --e-color-theme: var(--p-emerald-500);
     --e-border-radius: 8px;
-    --e-banner-padding: 3.5rem var(--e-content-h-padding) 2.5rem;
+    --e-banner-height: 220px;
+    --e-banner-padding: 0 var(--e-content-h-padding);
 }
 // 针对移动端设备的变量
 @media screen and (max-width: 800px) {
     :root {
         --e-display: none;
         --e-content-h-padding: 5%;
+        --e-banner-height: auto;
+        --e-banner-padding: 3.5rem var(--e-content-h-padding) 2.5rem;
     }
 }
 
@@ -41,10 +44,38 @@
 }
 
 // 基础元素样式
+.e-banner {
+    display: flex;
+    height: var(--e-banner-height);
+    padding: var(--e-banner-padding);
+    align-items: center;
+    flex-shrink: 0;
+    .e-title {
+        margin: 0;
+    }
+}
 .e-title {
     font-size: 1.75rem;
     font-weight: 600;
-    margin: 2rem 0;
+    margin: 2.5rem 0 4rem;
+}
+.e-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    border: 1px solid #f6f6f6;
+    box-shadow:
+        0 1px 3px 0 rgba(0, 0, 0, 0.1),
+        0 1px 2px -1px rgba(0, 0, 0, 0.1);
+    border-radius: var(--e-border-radius);
+    padding: 16px 18px;
+}
+a.e-card:hover {
+    color: inherit;
+    transition: all 0.25s ease-in-out;
+    box-shadow:
+        0 2px 6px 0 rgba(0, 0, 0, 0.1),
+        0 2px 4px -2px rgba(0, 0, 0, 0.1);
 }
 
 // 消除初始样式

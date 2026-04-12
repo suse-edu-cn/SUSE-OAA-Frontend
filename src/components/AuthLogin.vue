@@ -17,17 +17,17 @@ const emit = defineEmits(['switchMode'])
 
 const initialValues = ref({
     username: '',
-    password: ''
+    password: '',
 })
 
 const loginData = ref({
     username: '',
-    password: ''
+    password: '',
 })
 
 const loginSchema = z.object({
     username: z.string().min(1, { message: '请填写用户名' }),
-    password: z.string().min(1, { message: '请填写密码' })
+    password: z.string().min(1, { message: '请填写密码' }),
 })
 const loginResolver = zodResolver(loginSchema)
 
@@ -40,24 +40,39 @@ async function onLogin() {
         const resp = await request({
             url: '/user/login',
             method: 'POST',
-            data: loginData.value
+            data: loginData.value,
         })
 
         if (resp.code == 200) {
-            cookies.set('token', resp.data.token, { expires: 31, secure: true, sameSite: 'Lax', path: '/' })
+            cookies.set('token', resp.data.token, {
+                expires: 31,
+                secure: true,
+                sameSite: 'Lax',
+                path: '/',
+            })
             await initAuthStore()
             router.push('/user')
         } else {
             setToast('error', '登录失败', resp.message)
         }
     } catch (err) {
-        setToast('error', '登录失败', err.response?.data?.message || '未知错误，请联系负责后端的同学')
+        setToast(
+            'error',
+            '登录失败',
+            err.response?.data?.message || '未知错误，请联系负责后端的同学'
+        )
     }
 }
 </script>
 
 <template>
-    <Form v-slot="$form" :resolver="loginResolver" :initial-values="initialValues" class="right" @submit="onLogin">
+    <Form
+        v-slot="$form"
+        :resolver="loginResolver"
+        :initial-values="initialValues"
+        class="right"
+        @submit="onLogin"
+    >
         <h2>登录青蟹通行证</h2>
         <br />
 
@@ -65,12 +80,18 @@ async function onLogin() {
             <FloatLabel variant="on">
                 <IconField>
                     <InputIcon class="pi pi-users" />
-                    <InputText v-model="loginData.username" name="username" size="large" class="input-box" />
+                    <InputText
+                        v-model="loginData.username"
+                        name="username"
+                        size="large"
+                        class="input-box"
+                    />
                 </IconField>
                 <label for="on_label">用户名</label>
             </FloatLabel>
             <Message severity="error" size="small" variant="simple">
-                <span v-if="$form.username?.invalid">{{ $form.username.error?.message }}</span>&nbsp;
+                <span v-if="$form.username?.invalid">{{ $form.username.error?.message }}</span
+                >&nbsp;
             </Message>
         </div>
 
@@ -78,17 +99,23 @@ async function onLogin() {
             <FloatLabel variant="on">
                 <IconField>
                     <InputIcon class="pi pi-lock" />
-                    <InputText v-model="loginData.password" name="password" type="password" size="large"
-                        class="input-box" />
+                    <InputText
+                        v-model="loginData.password"
+                        name="password"
+                        type="password"
+                        size="large"
+                        class="input-box"
+                    />
                 </IconField>
                 <label for="on_label">密码</label>
             </FloatLabel>
             <Message severity="error" size="small" variant="simple">
-                <span v-if="$form.password?.invalid">{{ $form.password.error?.message }}</span>&nbsp;
+                <span v-if="$form.password?.invalid">{{ $form.password.error?.message }}</span
+                >&nbsp;
             </Message>
         </div>
 
-        <br>
+        <br />
         <Button type="submit" label="登录" class="input-box" />
 
         <p class="link" @click="emit('switchMode')">没有通行证？前往注册</p>
@@ -101,7 +128,7 @@ async function onLogin() {
     width: 60%;
     flex: 1;
     flex-direction: column;
-    gap: .75rem;
+    gap: 0.75rem;
     justify-content: center;
     align-items: center;
 

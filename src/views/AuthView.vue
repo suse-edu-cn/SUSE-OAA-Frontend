@@ -15,7 +15,7 @@ const imgSet = [
     'https://img.alicdn.com/O1CN01zvyC7r1ILG3pymwEb_!!2212930340876-2-ampmedia.png',
     'https://img.alicdn.com/O1CN01MviGBa1ILG3pHXMoq_!!2212930340876-2-ampmedia.png',
     'https://img.alicdn.com/O1CN01s8aLFO1ILG3qF6k0V_!!2212930340876-2-ampmedia.png',
-    'https://img.alicdn.com/O1CN01vxZ1KT1ILG3juISKN_!!2212930340876-0-ampmedia.jpg'
+    'https://img.alicdn.com/O1CN01vxZ1KT1ILG3juISKN_!!2212930340876-0-ampmedia.jpg',
 ]
 
 // portal 模式，0 为登录，1 为注册
@@ -32,19 +32,17 @@ onMounted(async () => {
         router.push('/user')
         initAuthStore()
     }
-
 })
 </script>
 
 <template>
     <main>
         <div class="left">
-            <img v-once :src="imgSet[Math.floor(Math.random() * imgSet.length)]" alt="" srcset="">
+            <img v-once :src="imgSet[Math.floor(Math.random() * imgSet.length)]" alt="" srcset="" />
         </div>
 
         <AuthLogin v-if="mode == 0" @switch-mode="mode = 1" />
         <AuthRegister v-if="mode == 1" @switch-mode="mode = 0" />
-
     </main>
 </template>
 

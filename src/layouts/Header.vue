@@ -47,7 +47,7 @@ header {
     }
 
     .right {
-        font-size: .9rem;
+        font-size: 0.9rem;
         display: flex;
         align-items: center;
         gap: 2rem;

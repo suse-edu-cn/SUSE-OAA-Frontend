@@ -20,14 +20,16 @@ const infoSchema = z.object({
     username: z.string().min(1, { message: '请填写用户名' }),
     role: z.string().min(1, { message: '请填写职位' }),
     department: z.string().min(1, { message: '请填写部门' }),
-    avatar: z.string().min(1, { message: '请上传有效的头像' })
+    avatar: z.string().min(1, { message: '请上传有效的头像' }),
 })
 const resolver = zodResolver(infoSchema)
 const updateData = ref({ ...userInfo })
 
 // 处理头像
 // userInfo 提供的头像链接是签名的 URL，此处需要转换为相对路径 URI
-updateData.value.avatar = decodeURIComponent(userInfo.avatar).split('aliyuncs.com/')[1].split('?')[0]
+updateData.value.avatar = decodeURIComponent(userInfo.avatar)
+    .split('aliyuncs.com/')[1]
+    .split('?')[0]
 
 async function onUpdateData() {
     if (!infoSchema.safeParse(updateData.value).success) {
@@ -38,7 +40,7 @@ async function onUpdateData() {
         const resp = await request({
             url: '/user/update',
             method: 'POST',
-            data: updateData.value
+            data: updateData.value,
         })
         if (resp.code == 200) {
             setToast('success', '修改成功', '你的个人信息已更新！')
@@ -78,10 +80,12 @@ async function uploadAvatar(event) {
         const resp = await request({
             url: '/user/uploadimg',
             method: 'POST',
-            data: formData
+            data: formData,
         })
         if (resp.code == 200) {
-            updateData.value.avatar = decodeURIComponent(resp.data.avatarUrl).split('aliyuncs.com/')[1].split('?')[0]
+            updateData.value.avatar = decodeURIComponent(resp.data.avatarUrl)
+                .split('aliyuncs.com/')[1]
+                .split('?')[0]
             avatar.value = resp.data.avatarUrl
             setToast('success', '头像更新成功', '')
         } else {
@@ -113,7 +117,8 @@ onMounted(() => {
         <Form v-slot="$form" :resolver="resolver" :initial-values="userInfo" @submit="onUpdateData">
             <!-- 头像 -->
             <div class="avatar">
-                <div>设置头像</div><br />
+                <div>设置头像</div>
+                <br />
                 <div class="wrapper" @click="fileInput.click()">
                     <img :src="avatar" alt="用户头像" />
                     <div class="overlay">
@@ -121,8 +126,13 @@ onMounted(() => {
                     </div>
                 </div>
                 <div class="tip">头像支持 JPG、PNG、WEBP 格式，大小不得超过 5MB</div>
-                <input ref="fileInput" type="file" accept=".jpg,.jpeg,.png,.webp" style="display:none"
-                    @change="uploadAvatar" />
+                <input
+                    ref="fileInput"
+                    type="file"
+                    accept=".jpg,.jpeg,.png,.webp"
+                    style="display: none"
+                    @change="uploadAvatar"
+                />
                 <InputText name="avatar" v-model="updateData.avatar" type="hidden" />
             </div>
 
@@ -151,7 +161,10 @@ onMounted(() => {
                         <InputText name="username" v-model="updateData.username" />
                     </IconField>
                     <Message severity="error" size="small" variant="simple">
-                        <span v-if="$form.username?.invalid">{{ $form.username.error?.message }}</span>&nbsp;
+                        <span v-if="$form.username?.invalid">{{
+                            $form.username.error?.message
+                        }}</span
+                        >&nbsp;
                     </Message>
                 </div>
                 <div class="item">
@@ -161,7 +174,8 @@ onMounted(() => {
                         <InputText name="role" v-model="updateData.role" />
                     </IconField>
                     <Message severity="error" size="small" variant="simple">
-                        <span v-if="$form.role?.invalid">{{ $form.role.error?.message }}</span>&nbsp;
+                        <span v-if="$form.role?.invalid">{{ $form.role.error?.message }}</span
+                        >&nbsp;
                     </Message>
                 </div>
                 <div class="item">
@@ -171,7 +185,10 @@ onMounted(() => {
                         <InputText name="department" v-model="updateData.department" />
                     </IconField>
                     <Message severity="error" size="small" variant="simple">
-                        <span v-if="$form.department?.invalid">{{ $form.department.error?.message }}</span>&nbsp;
+                        <span v-if="$form.department?.invalid">{{
+                            $form.department.error?.message
+                        }}</span
+                        >&nbsp;
                     </Message>
                 </div>
 
@@ -231,8 +248,6 @@ form {
             font-size: 14px;
             color: #666;
         }
-
-
     }
 
     label {
