@@ -28,14 +28,14 @@ const router = createRouter({
     ],
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to) => {
     const isAuthed = Boolean(cookies.get('token'))
     if (to.meta.requiresAuth && !isAuthed) {
         setToast('error', '未登录', '请先登录以访问该页面')
-        next('/auth')
-    } else {
-        next()
+        return '/auth'
     }
+
+    return true
 })
 
 export default router
