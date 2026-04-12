@@ -20,10 +20,14 @@ const infoSchema = z.object({
     username: z.string().min(1, { message: '请填写用户名' }),
     role: z.string().min(1, { message: '请填写职位' }),
     department: z.string().min(1, { message: '请填写部门' }),
-    avatar: z.string().regex(/^https:\/\/[A-Za-z0-9.-]+(?::\d+)?(\/\S*)?$/, { message: '头像链接应为 https 协议的 URL' })
+    avatar: z.string().min(1, { message: '请上传有效的头像' })
 })
 const resolver = zodResolver(infoSchema)
 const updateData = ref({ ...userInfo })
+
+// 处理头像
+// userInfo 提供的头像链接是签名的 URL，此处需要转换为相对路径 URI
+updateData.value.avatar = decodeURIComponent(userInfo.avatar).split('aliyuncs.com/')[1].split('?')[0]
 
 async function onUpdateData() {
     if (!infoSchema.safeParse(updateData.value).success) {
@@ -48,6 +52,48 @@ async function onUpdateData() {
     }
 }
 
+const fileInput = ref(null)
+const avatar = ref(userInfo.avatar)
+
+async function uploadAvatar(event) {
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp']
+    const target = event.target
+    const file = target.files[0]
+
+    if (!file) return
+
+    if (!allowedTypes.includes(file.type)) {
+        setToast('warn', '格式错误', '请选择符合要求的图片')
+        return
+    }
+    if (file.size > 5 * 1024 * 1024) {
+        setToast('warn', '文件过大', '请选择符合要求的图片')
+        return
+    }
+
+    const formData = new FormData()
+    formData.append('Image', file)
+
+    try {
+        const resp = await request({
+            url: '/user/uploadimg',
+            method: 'POST',
+            data: formData
+        })
+        if (resp.code == 200) {
+            updateData.value.avatar = decodeURIComponent(resp.data.avatarUrl).split('aliyuncs.com/')[1].split('?')[0]
+            avatar.value = resp.data.avatarUrl
+            setToast('success', '头像更新成功', '')
+        } else {
+            setToast('error', '头像上传失败', resp.message)
+        }
+    } catch (err) {
+        setToast('error', '头像上传失败', err.response?.message || '未知错误，请联系负责后端的同学')
+    }
+
+    target.value = ''
+}
+
 onMounted(() => {
     // 如果因刷新等原因导致 authStore 未初始化，则先 init
     if (!authStore.isReady) {
@@ -68,13 +114,15 @@ onMounted(() => {
             <!-- 头像 -->
             <div class="avatar">
                 <div>设置头像</div><br />
-                <div class="wrapper">
-                    <img :src="userInfo.avatar" alt="用户头像" />
+                <div class="wrapper" @click="fileInput.click()">
+                    <img :src="avatar" alt="用户头像" />
                     <div class="overlay">
                         <span class="pi pi-upload"></span>
                     </div>
                 </div>
                 <div class="tip">头像支持 JPG、PNG、WEBP 格式，大小不得超过 5MB</div>
+                <input ref="fileInput" type="file" accept=".jpg,.jpeg,.png,.webp" style="display:none"
+                    @change="uploadAvatar" />
                 <InputText name="avatar" v-model="updateData.avatar" type="hidden" />
             </div>
 
