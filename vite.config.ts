@@ -1,11 +1,24 @@
 import { resolve } from 'path'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import vueDevTools from 'vite-plugin-vue-devtools'
+import { execSync } from 'child_process'
+
+// 获取编译版本
+let gitVersion = 'unknown'
+try {
+    let gitHash = execSync('git rev-parse --short=7 HEAD').toString().trim()
+    let gitBranch = execSync('git rev-parse --abbrev-ref HEAD').toString().trim()
+    gitVersion = `${gitHash}@${gitBranch}`
+} catch {
+    console.warn('无法获取 git 版本信息')
+}
 
 // https://vite.dev/config/
 export default defineConfig({
-    plugins: [vue(), vueDevTools()],
+    define: {
+        __GIT_VERSION__: JSON.stringify(gitVersion),
+    },
+    plugins: [vue()],
     server: {
         port: 3011,
         proxy: {

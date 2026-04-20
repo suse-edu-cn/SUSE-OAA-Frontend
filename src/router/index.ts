@@ -21,6 +21,11 @@ const router = createRouter({
             component: () => import('@/views/UserEditView.vue'),
             meta: { requiresAuth: true },
         },
+        {
+            path: '/settings',
+            component: () => import('@/views/SettingsView.vue'),
+            meta: { requiresAuth: true },
+        },
 
         // 比赛相关
         { path: '/match', component: () => import('@/views/MatchListView.vue') },
