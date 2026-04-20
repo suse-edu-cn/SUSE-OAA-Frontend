@@ -4,8 +4,9 @@
     </footer>
 </template>
 
-<style>
+<style scoped lang="less">
 footer {
+    width: 100%;
     text-align: center;
     font-size: 0.9rem;
     padding: 1.25rem 0;

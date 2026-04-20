@@ -37,9 +37,7 @@ onMounted(async () => {
                             authStore.userInfo.role
                         }}&nbsp;·&nbsp;{{ authStore.userInfo.department }}
                     </div>
-                    <div>
-                        <span class="pi pi-users">&nbsp;{{ authStore.userInfo.student_id }}</span>
-                    </div>
+                    <div class="pi pi-users">&nbsp;{{ authStore.userInfo.student_id }}</div>
                 </span>
                 <span class="grow"></span>
                 <router-link to="/user/edit">
@@ -49,7 +47,7 @@ onMounted(async () => {
         </div>
     </div>
     <!-- 否则显示加载中骨架屏 -->
-    <div class="banner" style="background-color: var(--p-emerald-50)" v-else>
+    <div class="e-banner" style="background-color: var(--p-emerald-50)" v-else>
         <Skeleton shape="circle" size="129px" />
         <!-- 8rem + border -->
         <div class="info">
