@@ -128,12 +128,12 @@ async function onLogin() {
     width: 60%;
     flex: 1;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 10px;
     justify-content: center;
     align-items: center;
 
     .input-box {
-        width: var(--input-width);
+        width: var(--auth-input-width);
         max-width: 500px;
     }
 

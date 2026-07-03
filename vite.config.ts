@@ -34,7 +34,6 @@ export default defineConfig({
         assetsInlineLimit: 6144,
         rollupOptions: {
             output: {
-                hashCharacters: 'hex',
                 assetFileNames: '_oaa/[name]-[hash].[ext]',
                 chunkFileNames: '_oaa/[name]-[hash].js',
                 entryFileNames: '_oaa/[name]-[hash].js',
@@ -44,7 +43,7 @@ export default defineConfig({
     },
     resolve: {
         alias: {
-            '@': resolve(__dirname, './src'),
+            '@': resolve(import.meta.dirname, './src'),
         },
     },
 })

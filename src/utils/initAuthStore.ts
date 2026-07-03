@@ -27,7 +27,9 @@ export async function initAuthStore() {
                 authStore.token = ''
                 cookies.remove('token')
             }
-        } catch (e) {}
+        } catch (e) {
+            console.warn(e)
+        }
     }
 
     // 设置 isReady，此时 authStore 已经初始化完成

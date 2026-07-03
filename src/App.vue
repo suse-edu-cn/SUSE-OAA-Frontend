@@ -8,7 +8,7 @@ import 'normalize.css'
 import { initToast } from '@/utils/setToast.ts'
 import Header from '@/layouts/Header.vue'
 import Footer from '@/layouts/Footer.vue'
-import Drawer from '@/components/Drawer.vue'
+import Drawer from '@/layouts/Drawer.vue'
 import '@/styles/reset.less'
 
 initToast(useToast())

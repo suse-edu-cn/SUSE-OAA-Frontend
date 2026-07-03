@@ -26,10 +26,6 @@ const router = createRouter({
             component: () => import('@/views/SettingsView.vue'),
             meta: { requiresAuth: true },
         },
-
-        // 比赛相关
-        { path: '/match', component: () => import('@/views/MatchListView.vue') },
-        { path: '/match/:id', component: () => import('@/views/MatchDetailView.vue') },
     ],
 })
 

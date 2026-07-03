@@ -6,6 +6,8 @@ import { useAuthStore } from '@/stores/auth'
 import { initAuthStore } from '@/utils/initAuthStore'
 const authStore = useAuthStore()
 
+defineOptions({ name: 'PageHeader' })
+
 onMounted(async () => {
     if (!authStore.isReady) {
         await initAuthStore()
@@ -20,7 +22,7 @@ onMounted(async () => {
         </div>
         <div class="grow"></div>
         <div class="right">
-            <router-link to="/match">比赛中心</router-link>
+            <router-link to="#">比赛中心</router-link>
             <router-link to="/user" v-if="authStore.isAuthed">
                 <img :src="authStore.userInfo.avatar" alt="用户头像" />&nbsp;
                 {{ authStore.userInfo.username }}

@@ -50,6 +50,7 @@ onMounted(async () => {
 main {
     display: flex;
     justify-content: center;
+    min-height: 100%;
 
     .left {
         display: var(--e-display);
@@ -64,12 +65,16 @@ main {
         }
     }
 
-    --input-width: 20vw;
+    .right {
+        font-size: 15px;
+    }
+
+    --auth-input-width: 20vw;
 }
 
 @media screen and (max-width: 800px) {
     main {
-        --input-width: 95%;
+        --auth-input-width: 95%;
     }
 }
 </style>

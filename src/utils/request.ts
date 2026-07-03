@@ -19,7 +19,9 @@ const request = async function <T>(config: {
         try {
             const authStore = useAuthStore()
             token = authStore.token || ''
-        } catch (e) {}
+        } catch (e) {
+            console.warn(e)
+        }
         // 创建请求
         const response = await instance.request<T>({
             url: config.url,

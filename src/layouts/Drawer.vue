@@ -2,7 +2,7 @@
 import { useRoute } from 'vue-router'
 import { Menu } from 'primevue'
 
-import { version } from '@/../package.json'
+defineOptions({ name: 'PageDrawer' })
 
 const route = useRoute()
 
@@ -26,9 +26,6 @@ const links = [
         ],
     },
     {
-        separator: true,
-    },
-    {
         label: '设置',
         items: [
             {
@@ -37,9 +34,6 @@ const links = [
                 to: '/settings',
             },
         ],
-    },
-    {
-        separator: true,
     },
 ]
 </script>
@@ -67,19 +61,21 @@ const links = [
                 <span>{{ item.label }}</span>
             </span>
         </template>
-        <span class="grow"></span>
-        <template #end>
-            <span class="footer">v{{ version }}</span>
-        </template>
     </Menu>
 </template>
 
 <style lang="less">
+// 移除 menu 自身样式
+.p-menu.drawer {
+    border: none;
+    border-right: 1px solid #ddd;
+    border-radius: 0;
+}
+
 .drawer {
     width: 18%;
     max-width: 270px;
-    border-radius: 0 !important;
-    border-right: 1px solid #ddd;
+    font-size: 14px;
     padding: 8px 4px;
     display: flex;
     flex-direction: column;
@@ -89,6 +85,17 @@ const links = [
         padding: 32px;
         font-weight: bold;
         text-align: center;
+    }
+
+    // 列表撑满剩余空间，把最后一组菜单推到底部
+    .p-menu-list {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    li:nth-last-child(2) {
+        margin-top: auto;
     }
 
     .item {
@@ -112,13 +119,6 @@ const links = [
         span {
             font-size: 15px;
         }
-    }
-
-    .p-menu-end {
-        flex-grow: 1;
-        display: inline-flex;
-        align-items: flex-end;
-        justify-content: center;
     }
 
     .footer {
