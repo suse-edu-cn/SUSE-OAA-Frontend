@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 import { z } from 'zod'
 import cookies from 'js-cookie'
 
-import { Button, FloatLabel, IconField, InputIcon, InputText, Message } from 'primevue'
+import { Button, Checkbox, FloatLabel, IconField, InputIcon, InputText, Message } from 'primevue'
 import { Form } from '@primevue/forms'
 import { zodResolver } from '@primevue/forms/resolvers/zod'
 
@@ -13,21 +13,24 @@ import request from '@/utils/request'
 import setToast from '@/utils/setToast'
 
 const router = useRouter()
-const emit = defineEmits(['switchMode'])
+const emit = defineEmits(['forgot'])
 
 const initialValues = ref({
     username: '',
     password: '',
+    isAccepted: false,
 })
 
 const loginData = ref({
     username: '',
     password: '',
+    isAccepted: false,
 })
 
 const loginSchema = z.object({
     username: z.string().min(1, { message: '请填写用户名' }),
     password: z.string().min(1, { message: '请填写密码' }),
+    isAccepted: z.literal(true),
 })
 const loginResolver = zodResolver(loginSchema)
 
@@ -73,9 +76,6 @@ async function onLogin() {
         class="right"
         @submit="onLogin"
     >
-        <h2>登录青蟹通行证</h2>
-        <br />
-
         <div class="input-box">
             <FloatLabel variant="on">
                 <IconField>
@@ -115,26 +115,36 @@ async function onLogin() {
             </Message>
         </div>
 
+        <div class="input-box">
+            <Checkbox
+                v-model="loginData.isAccepted"
+                input-id="isAccepted"
+                name="isAccepted"
+                binary
+            />
+            <label for="isAccepted"
+                >&nbsp;&nbsp;我已阅读并同意<a href="#" target="_blank">《用户协议》</a></label
+            >
+        </div>
+
         <br />
         <Button type="submit" label="登录" class="input-box" />
 
-        <p class="link" @click="emit('switchMode')">没有通行证？前往注册</p>
+        <p class="link" @click="emit('forgot')">忘记密码？</p>
     </Form>
 </template>
 
 <style lang="less" scoped>
 .right {
     display: flex;
-    width: 60%;
-    flex: 1;
+    width: 100%;
     flex-direction: column;
-    gap: 10px;
+    gap: 4px;
     justify-content: center;
     align-items: center;
 
     .input-box {
-        width: var(--auth-input-width);
-        max-width: 500px;
+        width: 100%;
     }
 
     .link {

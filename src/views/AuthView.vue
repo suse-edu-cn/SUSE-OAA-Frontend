@@ -1,6 +1,7 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { Tabs, TabList, Tab, TabPanels, TabPanel } from 'primevue'
 
 import AuthLogin from '@/components/AuthLogin.vue'
 import AuthRegister from '@/components/AuthRegister.vue'
@@ -18,8 +19,8 @@ const imgSet = [
     'https://img.alicdn.com/O1CN01vxZ1KT1ILG3juISKN_!!2212930340876-0-ampmedia.jpg',
 ]
 
-// portal 模式，0 为登录，1 为注册
-const mode = ref(0)
+// portal 模式：login 为登录，register 为注册
+const mode = ref('login')
 
 onMounted(async () => {
     // 如果因刷新等原因导致 authStore 未初始化，则先 init
@@ -41,8 +42,22 @@ onMounted(async () => {
             <img v-once :src="imgSet[Math.floor(Math.random() * imgSet.length)]" alt="" srcset="" />
         </div>
 
-        <AuthLogin v-if="mode == 0" @switch-mode="mode = 1" />
-        <AuthRegister v-if="mode == 1" @switch-mode="mode = 0" />
+        <div class="right">
+            <Tabs v-model:value="mode" class="tab-container">
+                <TabList>
+                    <Tab value="login" class="tab-value">登录</Tab>
+                    <Tab value="register" class="tab-value">注册</Tab>
+                </TabList>
+                <TabPanels>
+                    <TabPanel value="login">
+                        <AuthLogin />
+                    </TabPanel>
+                    <TabPanel value="register">
+                        <AuthRegister @switch-mode="mode = 'login'" />
+                    </TabPanel>
+                </TabPanels>
+            </Tabs>
+        </div>
     </main>
 </template>
 
@@ -66,15 +81,46 @@ main {
     }
 
     .right {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        justify-content: center;
         font-size: 15px;
+
+        .tab-container {
+            width: var(--auth-input-width);
+            max-width: 500px;
+            align-self: center;
+
+            .tab-value {
+                width: 50%;
+            }
+
+            // 面板叠放在同一网格，容器高度恒为最高面板
+            // 避免切换时高度变化导致 Tab 头位置变动
+            :deep(.p-tabpanels) {
+                display: grid;
+            }
+
+            :deep(.p-tabpanel) {
+                grid-area: 1 / 1;
+            }
+
+            :deep(.p-tabpanel[data-p-active='false']) {
+                display: block !important;
+                visibility: hidden;
+                opacity: 0; // 作用于整个子树合成，避免子元素 transition 拖出残影
+                pointer-events: none;
+            }
+        }
     }
 
-    --auth-input-width: 20vw;
+    --auth-input-width: max(20vw, 300px);
 }
 
 @media screen and (max-width: 800px) {
     main {
-        --auth-input-width: 95%;
+        --auth-input-width: 100%;
     }
 }
 </style>

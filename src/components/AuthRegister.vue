@@ -79,9 +79,6 @@ async function onRegister() {
         class="right"
         @submit="onRegister"
     >
-        <h2>注册青蟹通行证</h2>
-        <br />
-
         <div class="input-box">
             <FloatLabel variant="on">
                 <IconField>
@@ -188,31 +185,22 @@ async function onRegister() {
                 >&nbsp;&nbsp;我已阅读并同意<a href="#" target="_blank">《用户协议》</a></label
             >
         </div>
-        <br /><br />
+        <br />
         <Button type="submit" label="注册" class="input-box" />
-
-        <p class="link" @click="emit('switchMode')">已经拥有通行证？前往登录</p>
     </Form>
 </template>
 
 <style lang="less" scoped>
 .right {
     display: flex;
-    width: 60%;
-    flex: 1;
+    width: 100%;
     flex-direction: column;
-    gap: 10px;
+    gap: 4px;
     justify-content: center;
     align-items: center;
 
     .input-box {
-        width: var(--auth-input-width);
-        max-width: 500px;
-    }
-
-    .link {
-        color: var(--e-color-theme);
-        cursor: pointer;
+        width: 100%;
     }
 }
 </style>
