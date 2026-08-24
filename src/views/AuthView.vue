@@ -5,6 +5,7 @@ import { Tabs, TabList, Tab, TabPanels, TabPanel } from 'primevue'
 
 import AuthLogin from '@/components/AuthLogin.vue'
 import AuthRegister from '@/components/AuthRegister.vue'
+import AuthResetPass from '@/components/AuthResetPass.vue'
 import { useAuthStore } from '@/stores/auth'
 import { initAuthStore } from '@/utils/initAuthStore'
 import setToast from '@/utils/setToast'
@@ -19,7 +20,7 @@ const imgSet = [
     'https://img.alicdn.com/O1CN01vxZ1KT1ILG3juISKN_!!2212930340876-0-ampmedia.jpg',
 ]
 
-// portal 模式：login 为登录，register 为注册
+// portal 模式 -> login / register / reset
 const mode = ref('login')
 
 onMounted(async () => {
@@ -27,7 +28,6 @@ onMounted(async () => {
     if (!authStore.isReady) {
         await initAuthStore()
     }
-
     if (authStore.isAuthed) {
         setToast('success', '用户已登录', '欢迎回来，正在跳转至主页')
         router.push('/user')
@@ -43,17 +43,21 @@ onMounted(async () => {
         </div>
 
         <div class="right">
+            <h2>欢迎使用青蟹</h2>
             <Tabs v-model:value="mode" class="tab-container">
-                <TabList>
+                <TabList class="tab-list">
                     <Tab value="login" class="tab-value">登录</Tab>
                     <Tab value="register" class="tab-value">注册</Tab>
                 </TabList>
                 <TabPanels>
                     <TabPanel value="login">
-                        <AuthLogin />
+                        <AuthLogin @forgot="mode = 'reset'" />
                     </TabPanel>
                     <TabPanel value="register">
                         <AuthRegister @switch-mode="mode = 'login'" />
+                    </TabPanel>
+                    <TabPanel value="reset">
+                        <AuthResetPass @switch-mode="mode = 'login'" />
                     </TabPanel>
                 </TabPanels>
             </Tabs>
@@ -85,15 +89,26 @@ main {
         flex: 1;
         flex-direction: column;
         justify-content: center;
+        align-items: center;
         font-size: 15px;
+
+        h2 {
+            width: var(--auth-input-width);
+            margin-bottom: 2rem;
+        }
 
         .tab-container {
             width: var(--auth-input-width);
             max-width: 500px;
             align-self: center;
 
+            .tab-list {
+                justify-content: space-between;
+                margin-bottom: 1rem;
+            }
+
             .tab-value {
-                width: 50%;
+                width: 49%;
             }
 
             // 面板叠放在同一网格，容器高度恒为最高面板
@@ -115,7 +130,7 @@ main {
         }
     }
 
-    --auth-input-width: max(20vw, 300px);
+    --auth-input-width: max(75%, 300px);
 }
 
 @media screen and (max-width: 800px) {
