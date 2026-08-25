@@ -1,10 +1,17 @@
 <script setup>
-import { onMounted } from 'vue'
-import { RouterLink } from 'vue-router'
+import { onMounted, ref } from 'vue'
+import { RouterLink, useRouter } from 'vue-router'
+import { Menu } from 'primevue'
+import cookies from 'js-cookie'
 
 import { useAuthStore } from '@/stores/auth'
 import { initAuthStore } from '@/utils/initAuthStore'
+import request from '@/utils/request'
+import setToast from '@/utils/setToast'
+
 const authStore = useAuthStore()
+const router = useRouter()
+const userMenu = ref()
 
 defineOptions({ name: 'PageHeader' })
 
@@ -13,6 +20,29 @@ onMounted(async () => {
         await initAuthStore()
     }
 })
+
+async function onLogout() {
+    await request({ url: '/user/logout', method: 'POST' })
+
+    cookies.remove('token', { path: '/' })
+    authStore.$patch({ token: '', isAuthed: false, userInfo: null })
+
+    setToast('success', '已登出')
+    router.push('/auth')
+}
+
+const userItems = [
+    {
+        label: '个人主页',
+        icon: 'pi pi-user',
+        command: () => router.push('/user'),
+    },
+    {
+        label: '登出',
+        icon: 'pi pi-sign-out',
+        command: onLogout,
+    },
+]
 </script>
 
 <template>
@@ -23,10 +53,11 @@ onMounted(async () => {
         <div class="grow"></div>
         <div class="right">
             <router-link to="#">比赛中心</router-link>
-            <router-link to="/user" v-if="authStore.isAuthed">
-                <img :src="authStore.userInfo.avatar" alt="用户头像" />&nbsp;
+            <div v-if="authStore.isAuthed" class="user" @click="userMenu?.toggle($event)">
+                <img :src="authStore.userInfo.avatar" alt="用户头像" />
                 {{ authStore.userInfo.username }}
-            </router-link>
+            </div>
+            <Menu ref="userMenu" :model="userItems" class="header-menu" popup />
             <router-link to="/auth" v-if="!authStore.isAuthed">登录</router-link>
         </div>
     </header>
@@ -64,6 +95,22 @@ header {
             height: 2.25em;
             border-radius: 50%;
         }
+
+        .user {
+            display: flex;
+            align-items: center;
+            gap: 0.4em;
+            cursor: pointer;
+        }
+    }
+}
+</style>
+
+<style lang="less">
+.header-menu {
+    .p-menu-item-link {
+        padding: 8px 10px;
+        font-size: 15px;
     }
 }
 </style>
