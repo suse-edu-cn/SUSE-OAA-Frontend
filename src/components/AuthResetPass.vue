@@ -68,23 +68,12 @@ async function onReset() {
 </script>
 
 <template>
-    <Form
-        v-slot="$form"
-        :resolver="resetResolver"
-        :initial-values="initialValues"
-        class="right"
-        @submit="onReset"
-    >
+    <Form v-slot="$form" :resolver="resetResolver" :initial-values="initialValues" class="right" @submit="onReset">
         <div class="input-box">
             <FloatLabel variant="on">
                 <IconField>
                     <InputIcon class="pi pi-envelope" />
-                    <InputText
-                        v-model="resetData.email"
-                        name="email"
-                        size="large"
-                        class="input-box"
-                    />
+                    <InputText v-model="resetData.email" name="email" size="large" class="input-box" />
                 </IconField>
                 <label for="on_label">邮箱</label>
             </FloatLabel>
@@ -99,12 +88,7 @@ async function onReset() {
                 <FloatLabel variant="on" class="code-field">
                     <IconField>
                         <InputIcon class="pi pi-unlock" />
-                        <InputText
-                            v-model="resetData.code"
-                            name="code"
-                            size="large"
-                            class="code-input"
-                        />
+                        <InputText v-model="resetData.code" name="code" size="large" class="code-input" />
                     </IconField>
                     <label for="on_label">验证码</label>
                 </FloatLabel>

@@ -31,10 +31,7 @@ const registerData = ref({
 })
 
 const registerSchema = z.object({
-    student_id: z
-        .string()
-        .min(1, { message: '请填写学号' })
-        .regex(/^\d+$/, { message: '学号必须为数字' }),
+    student_id: z.string().min(1, { message: '请填写学号' }).regex(/^\d+$/, { message: '学号必须为数字' }),
     name: z.string().min(1, { message: '请填写姓名' }),
     username: z.string().min(1, { message: '请填写用户名' }),
     email: z.email({ message: '邮箱格式不正确' }),
@@ -62,11 +59,7 @@ async function onRegister() {
             setToast('error', '注册失败', resp.message)
         }
     } catch (err) {
-        setToast(
-            'error',
-            '注册失败',
-            err.response?.data?.message || '未知错误，请联系负责后端的同学'
-        )
+        setToast('error', '注册失败', err.response?.data?.message || '未知错误，请联系负责后端的同学')
     }
 }
 </script>
@@ -83,12 +76,7 @@ async function onRegister() {
             <FloatLabel variant="on">
                 <IconField>
                     <InputIcon class="pi pi-id-card" />
-                    <InputText
-                        v-model="registerData.student_id"
-                        name="student_id"
-                        size="large"
-                        class="input-box"
-                    />
+                    <InputText v-model="registerData.student_id" name="student_id" size="large" class="input-box" />
                 </IconField>
                 <label for="on_label">学号</label>
             </FloatLabel>
@@ -102,12 +90,7 @@ async function onRegister() {
             <FloatLabel variant="on">
                 <IconField>
                     <InputIcon class="pi pi-user" />
-                    <InputText
-                        v-model="registerData.name"
-                        name="name"
-                        size="large"
-                        class="input-box"
-                    />
+                    <InputText v-model="registerData.name" name="name" size="large" class="input-box" />
                 </IconField>
                 <label for="on_label">姓名</label>
             </FloatLabel>
@@ -121,12 +104,7 @@ async function onRegister() {
             <FloatLabel variant="on">
                 <IconField>
                     <InputIcon class="pi pi-users" />
-                    <InputText
-                        v-model="registerData.username"
-                        name="username"
-                        size="large"
-                        class="input-box"
-                    />
+                    <InputText v-model="registerData.username" name="username" size="large" class="input-box" />
                 </IconField>
                 <label for="on_label">用户名</label>
             </FloatLabel>
@@ -140,12 +118,7 @@ async function onRegister() {
             <FloatLabel variant="on">
                 <IconField>
                     <InputIcon class="pi pi-envelope" />
-                    <InputText
-                        v-model="registerData.email"
-                        name="email"
-                        size="large"
-                        class="input-box"
-                    />
+                    <InputText v-model="registerData.email" name="email" size="large" class="input-box" />
                 </IconField>
                 <label for="on_label">邮箱</label>
             </FloatLabel>
@@ -175,15 +148,8 @@ async function onRegister() {
             </Message>
         </div>
         <div class="input-box">
-            <Checkbox
-                v-model="registerData.isAccepted"
-                input-id="isAccepted"
-                name="isAccepted"
-                binary
-            />
-            <label for="isAccepted"
-                >&nbsp;&nbsp;我已阅读并同意<a href="#" target="_blank">《用户协议》</a></label
-            >
+            <Checkbox v-model="registerData.isAccepted" input-id="isAccepted" name="isAccepted" binary />
+            <label for="isAccepted">&nbsp;&nbsp;我已阅读并同意<a href="#" target="_blank">《用户协议》</a></label>
         </div>
         <br />
         <Button type="submit" label="注册" class="input-box" />

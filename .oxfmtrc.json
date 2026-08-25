@@ -5,5 +5,7 @@
     "jsxSingleQuote": true,
     "tabWidth": 4,
     "semi": false,
+    "singleAttributePerLine": false,
+    "printWidth": 120,
     "ignorePatterns": [".claude/*", ".github/*", ".vscode/*", "scripts/*", "*.md"]
 }

@@ -47,12 +47,7 @@ const links = [
             <span class="title">{{ item.label }}</span>
         </template>
         <template #item="{ item }">
-            <RouterLink
-                v-if="item.to"
-                :to="item.to"
-                class="item"
-                :class="{ active: item.to === route.path }"
-            >
+            <RouterLink v-if="item.to" :to="item.to" class="item" :class="{ active: item.to === route.path }">
                 <i :class="item.icon"></i>
                 <span>{{ item.label }}</span>
             </RouterLink>
