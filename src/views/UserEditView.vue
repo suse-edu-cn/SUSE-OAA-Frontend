@@ -18,8 +18,7 @@ const userInfo = authStore.userInfo
 
 const infoSchema = z.object({
     username: z.string().min(1, { message: '请填写用户名' }),
-    role: z.string().min(1, { message: '请填写职位' }),
-    department: z.string().min(1, { message: '请填写部门' }),
+    email: z.email({ message: '请填写有效的邮箱' }),
     avatar: z.string().min(1, { message: '请上传有效的头像' }),
 })
 const resolver = zodResolver(infoSchema)
@@ -27,9 +26,7 @@ const updateData = ref({ ...userInfo })
 
 // 处理头像
 // userInfo 提供的头像链接是签名的 URL，此处需要转换为相对路径 URI
-updateData.value.avatar = decodeURIComponent(userInfo.avatar)
-    .split('aliyuncs.com/')[1]
-    .split('?')[0]
+updateData.value.avatar = decodeURIComponent(userInfo.avatar).split('aliyuncs.com/')[1].split('?')[0]
 
 async function onUpdateData() {
     if (!infoSchema.safeParse(updateData.value).success) {
@@ -83,9 +80,7 @@ async function uploadAvatar(event) {
             data: formData,
         })
         if (resp.code == 200) {
-            updateData.value.avatar = decodeURIComponent(resp.data.avatarUrl)
-                .split('aliyuncs.com/')[1]
-                .split('?')[0]
+            updateData.value.avatar = decodeURIComponent(resp.data.avatarUrl).split('aliyuncs.com/')[1].split('?')[0]
             avatar.value = resp.data.avatarUrl
             setToast('success', '头像更新成功', '')
         } else {
@@ -125,7 +120,7 @@ onMounted(() => {
                         <span class="pi pi-upload"></span>
                     </div>
                 </div>
-                <div class="tip">头像支持 JPG、PNG、WEBP 格式，大小不得超过 5MB</div>
+                <div class="tip">头像支持 JPG、PNG、WEBP 格式，大小不得超过 4MB</div>
                 <input
                     ref="fileInput"
                     type="file"
@@ -161,33 +156,18 @@ onMounted(() => {
                         <InputText name="username" v-model="updateData.username" />
                     </IconField>
                     <Message severity="error" size="small" variant="simple">
-                        <span v-if="$form.username?.invalid">{{
-                            $form.username.error?.message
-                        }}</span
+                        <span v-if="$form.username?.invalid">{{ $form.username.error?.message }}</span
                         >&nbsp;
                     </Message>
                 </div>
                 <div class="item">
-                    <label for="role">职位</label>
+                    <label for="role">邮箱</label>
                     <IconField>
-                        <InputIcon class="pi pi-address-book" />
-                        <InputText name="role" v-model="updateData.role" />
+                        <InputIcon class="pi pi-envelope" />
+                        <InputText name="role" v-model="updateData.email" />
                     </IconField>
                     <Message severity="error" size="small" variant="simple">
                         <span v-if="$form.role?.invalid">{{ $form.role.error?.message }}</span
-                        >&nbsp;
-                    </Message>
-                </div>
-                <div class="item">
-                    <label for="department">部门</label>
-                    <IconField>
-                        <InputIcon class="pi pi-sitemap" />
-                        <InputText name="department" v-model="updateData.department" />
-                    </IconField>
-                    <Message severity="error" size="small" variant="simple">
-                        <span v-if="$form.department?.invalid">{{
-                            $form.department.error?.message
-                        }}</span
                         >&nbsp;
                     </Message>
                 </div>

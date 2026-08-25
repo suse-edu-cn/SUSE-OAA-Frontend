@@ -8,7 +8,8 @@
 // 变量设置
 // 注： -e 代表变量对全局生效
 //     -h → horizontal, -v → vertical
-:root {
+:root,
+:host {
     --e-display: flex;
     --e-content-h-padding: 15%;
     --e-content-h-max-width: 1400px;
@@ -16,6 +17,10 @@
     --e-border-radius: 8px;
     --e-banner-height: 220px;
     --e-banner-padding: 0 var(--e-content-h-padding);
+
+    // 自定义主题
+    --p-inputtext-font: 15px;
+    --p-inputtext-padding-y: 7px !important;
 }
 // 针对移动端设备的变量
 @media screen and (max-width: 800px) {
@@ -41,6 +46,10 @@
         max-width: 100%;
         padding: 0 var(--e-content-h-padding);
     }
+}
+
+.p-inputtext {
+    font-size: var(--p-inputtext-font) !important;
 }
 
 // 基础元素样式

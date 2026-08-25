@@ -24,7 +24,6 @@ const initialValues = ref({
 const loginData = ref({
     username: '',
     password: '',
-    isAccepted: false,
 })
 
 const loginSchema = z.object({
@@ -59,33 +58,18 @@ async function onLogin() {
             setToast('error', '登录失败', resp.message)
         }
     } catch (err) {
-        setToast(
-            'error',
-            '登录失败',
-            err.response?.data?.message || '未知错误，请联系负责后端的同学'
-        )
+        setToast('error', '登录失败', err.response?.data?.message || '未知错误，请联系负责后端的同学')
     }
 }
 </script>
 
 <template>
-    <Form
-        v-slot="$form"
-        :resolver="loginResolver"
-        :initial-values="initialValues"
-        class="right"
-        @submit="onLogin"
-    >
+    <Form v-slot="$form" :resolver="loginResolver" :initial-values="initialValues" class="right" @submit="onLogin">
         <div class="input-box">
             <FloatLabel variant="on">
                 <IconField>
                     <InputIcon class="pi pi-users" />
-                    <InputText
-                        v-model="loginData.username"
-                        name="username"
-                        size="large"
-                        class="input-box"
-                    />
+                    <InputText v-model="loginData.username" name="username" size="large" class="input-box" />
                 </IconField>
                 <label for="on_label">用户名</label>
             </FloatLabel>
@@ -116,15 +100,8 @@ async function onLogin() {
         </div>
 
         <div class="input-box">
-            <Checkbox
-                v-model="loginData.isAccepted"
-                input-id="isAccepted"
-                name="isAccepted"
-                binary
-            />
-            <label for="isAccepted"
-                >&nbsp;&nbsp;我已阅读并同意<a href="#" target="_blank">《用户协议》</a></label
-            >
+            <Checkbox v-model="loginData.isAccepted" input-id="isAccepted" name="isAccepted" binary />
+            <label for="isAccepted">&nbsp;&nbsp;我已阅读并同意<a href="#" target="_blank">《用户协议》</a></label>
         </div>
 
         <br />
