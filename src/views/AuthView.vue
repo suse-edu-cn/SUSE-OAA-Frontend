@@ -57,7 +57,7 @@ onMounted(async () => {
                         <AuthRegister @switch-mode="mode = 'login'" />
                     </TabPanel>
                     <TabPanel value="reset">
-                        <AuthResetPass @switch-mode="mode = 'login'" />
+                        <AuthResetPass :scene="0" @switch-mode="mode = 'login'" />
                     </TabPanel>
                 </TabPanels>
             </Tabs>

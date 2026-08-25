@@ -3,9 +3,11 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { z } from 'zod'
 
-import { Button, IconField, InputIcon, InputText, Message } from 'primevue'
+import { Button, Dialog, IconField, InputIcon, InputText, Message } from 'primevue'
 import { Form } from '@primevue/forms'
 import { zodResolver } from '@primevue/forms/resolvers/zod'
+
+import AuthChangePass from '@/components/AuthChangePass.vue'
 
 import { useAuthStore } from '@/stores/auth'
 import { initAuthStore } from '@/utils/initAuthStore'
@@ -23,6 +25,7 @@ const infoSchema = z.object({
 })
 const resolver = zodResolver(infoSchema)
 const updateData = ref({ ...userInfo })
+const showChangePass = ref(false) // 修改密码弹窗
 
 // 处理头像
 // userInfo 提供的头像链接是签名的 URL，此处需要转换为相对路径 URI
@@ -133,7 +136,7 @@ onMounted(() => {
 
             <!-- 表单 -->
             <div class="info">
-                <div class="item">
+                <div>
                     <label for="student_id">学号</label>
                     <IconField>
                         <InputIcon class="pi pi-id-card" />
@@ -141,7 +144,7 @@ onMounted(() => {
                     </IconField>
                     <Message severity="error" size="small" variant="simple">&nbsp;</Message>
                 </div>
-                <div class="item">
+                <div>
                     <label for="name">姓名</label>
                     <IconField>
                         <InputIcon class="pi pi-user" />
@@ -149,7 +152,7 @@ onMounted(() => {
                     </IconField>
                     <Message severity="error" size="small" variant="simple">&nbsp;</Message>
                 </div>
-                <div class="item">
+                <div>
                     <label for="username">用户名</label>
                     <IconField>
                         <InputIcon class="pi pi-users" />
@@ -160,21 +163,36 @@ onMounted(() => {
                         >&nbsp;
                     </Message>
                 </div>
-                <div class="item">
-                    <label for="role">邮箱</label>
+                <div>
+                    <label for="email">邮箱</label>
                     <IconField>
                         <InputIcon class="pi pi-envelope" />
-                        <InputText name="role" v-model="updateData.email" />
+                        <InputText name="email" v-model="updateData.email" />
                     </IconField>
                     <Message severity="error" size="small" variant="simple">
-                        <span v-if="$form.role?.invalid">{{ $form.role.error?.message }}</span
+                        <span v-if="$form.email?.invalid">{{ $form.email.error?.message }}</span
                         >&nbsp;
                     </Message>
                 </div>
 
-                <Button type="submit" label="保存修改" icon="pi pi-save" class="item" />
+                <div class="button-group">
+                    <Button type="submit" label="保存修改" icon="pi pi-save" />
+                    <Button
+                        type="button"
+                        label="修改密码"
+                        icon="pi pi-lock"
+                        severity="secondary"
+                        @click="showChangePass = true"
+                    />
+                </div>
             </div>
         </Form>
+
+        <!-- 修改密码 -->
+        <Dialog v-model:visible="showChangePass" header="修改密码" modal class="reset-dialog">
+            <br />
+            <AuthChangePass @switch-mode="showChangePass = false" />
+        </Dialog>
     </main>
 </template>
 
@@ -253,8 +271,10 @@ form {
         margin: 3px 4rem;
     }
 
-    .p-button {
-        margin: 1rem var(--button-margin) 3rem;
+    .button-group {
+        display: flex;
+        gap: 1rem;
+        margin: 1rem 0 3rem var(--button-margin);
     }
 
     --container-direction: row-reverse;
@@ -274,5 +294,13 @@ form {
         --label-width: 90%;
         --button-margin: 0;
     }
+}
+</style>
+
+<style lang="less">
+// Dialog 默认 teleport 到 body，scoped 样式无法命中，用全局样式控制宽度
+.reset-dialog {
+    width: 24rem;
+    max-width: 90vw;
 }
 </style>

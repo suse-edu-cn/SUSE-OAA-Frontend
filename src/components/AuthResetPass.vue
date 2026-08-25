@@ -7,6 +7,14 @@ import { zodResolver } from '@primevue/forms/resolvers/zod'
 
 import setToast from '@/utils/setToast'
 
+defineProps({
+    // 0: AuthView 登录页的重置流程；1: 用户编辑页弹窗内的重置流程
+    scene: {
+        type: Number,
+        default: 0,
+    },
+})
+
 const emit = defineEmits(['switchMode'])
 
 const initialValues = ref({
@@ -68,7 +76,7 @@ async function onReset() {
 </script>
 
 <template>
-    <Form v-slot="$form" :resolver="resetResolver" :initial-values="initialValues" class="right" @submit="onReset">
+    <Form v-slot="$form" :resolver="resetResolver" :initial-values="initialValues" class="wrapper" @submit="onReset">
         <div class="input-box">
             <FloatLabel variant="on">
                 <IconField>
@@ -109,12 +117,12 @@ async function onReset() {
         <br />
         <Button type="submit" label="重置密码" class="input-box" />
 
-        <p class="link" @click="emit('switchMode')">返回登录</p>
+        <p class="link" @click="emit('switchMode')">{{ scene === 0 ? '返回登录' : '返回修改密码' }}</p>
     </Form>
 </template>
 
 <style lang="less" scoped>
-.right {
+.wrapper {
     display: flex;
     width: 100%;
     flex-direction: column;

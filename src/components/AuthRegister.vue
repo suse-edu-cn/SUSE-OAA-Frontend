@@ -69,7 +69,7 @@ async function onRegister() {
         v-slot="$form"
         :resolver="registerResolver"
         :initial-values="initialValues"
-        class="right"
+        class="wrapper"
         @submit="onRegister"
     >
         <div class="input-box">
@@ -157,7 +157,7 @@ async function onRegister() {
 </template>
 
 <style lang="less" scoped>
-.right {
+.wrapper {
     display: flex;
     width: 100%;
     flex-direction: column;

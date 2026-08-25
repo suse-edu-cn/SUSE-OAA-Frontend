@@ -64,7 +64,7 @@ async function onLogin() {
 </script>
 
 <template>
-    <Form v-slot="$form" :resolver="loginResolver" :initial-values="initialValues" class="right" @submit="onLogin">
+    <Form v-slot="$form" :resolver="loginResolver" :initial-values="initialValues" class="wrapper" @submit="onLogin">
         <div class="input-box">
             <FloatLabel variant="on">
                 <IconField>
@@ -112,7 +112,7 @@ async function onLogin() {
 </template>
 
 <style lang="less" scoped>
-.right {
+.wrapper {
     display: flex;
     width: 100%;
     flex-direction: column;
