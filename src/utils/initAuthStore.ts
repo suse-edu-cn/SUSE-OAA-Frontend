@@ -9,19 +9,21 @@ export async function initAuthStore() {
     // 如果 cookie 里有 token，则尝试获取用户信息
     if (token) {
         authStore.token = token
+        authStore.refreshToken = cookies.get('refresh_token') || ''
         try {
             const stateResp: {
                 code: number
                 data: any
                 message: string
             } = await request({
-                url: '/user/Info',
+                url: '/user/me',
                 method: 'GET',
                 token,
             })
             if (stateResp.code == 200) {
                 authStore.isAuthed = true
                 authStore.userInfo = stateResp.data
+                authStore.userInfo.avatar = stateResp.data.avatar || { uri: '', url: '' }
                 authStore.userInfo.department = stateResp.data.department || '未设置职位'
             } else {
                 authStore.token = ''

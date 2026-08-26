@@ -27,7 +27,7 @@ onMounted(async () => {
 <template>
     <!-- 如果登录状态正常，就显示包含信息的 banner -->
     <div class="e-banner" style="background-color: var(--p-emerald-50)" v-if="authStore.isAuthed">
-        <img :src="authStore.userInfo.avatar" alt="用户头像" srcset="" />
+        <img :src="authStore.userInfo.avatar?.url" alt="用户头像" srcset="" />
         <div class="info">
             <div class="title">{{ authStore.userInfo.username }}</div>
             <div class="subtitle">

@@ -5,12 +5,14 @@ export const useAuthStore = defineStore('auth', () => {
     const isReady = ref(false)
     const isAuthed = ref(false)
     const token = ref<string>('')
+    const refreshToken = ref<string>('')
     const userInfo = ref<any>(null)
 
     return {
         isReady,
         isAuthed,
         token,
+        refreshToken,
         userInfo,
     }
 })

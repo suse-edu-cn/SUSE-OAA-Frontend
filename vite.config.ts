@@ -22,11 +22,10 @@ export default defineConfig({
     server: {
         port: 3011,
         proxy: {
-            '/api': {
-                target: 'https://api.suseoaa.com',
+            '/v2': {
+                target: 'https://api.in.suseoaa.com',
                 changeOrigin: true,
                 secure: false,
-                rewrite: (path) => path.replace(/^\/api/, ''),
             },
         },
     },

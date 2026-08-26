@@ -14,23 +14,23 @@ const request = async function <T>(config: {
     token?: string
 }): Promise<T> {
     try {
-        // 从 store 中获取 token，如果调用时没提供 token 就用这个
-        let token = ''
-        try {
-            const authStore = useAuthStore()
-            token = authStore.token || ''
-        } catch (e) {
-            console.warn(e)
+        // 优先使用调用时提供的 token，否则从 store 中获取
+        let token = config.token || ''
+        if (!token) {
+            try {
+                const authStore = useAuthStore()
+                token = authStore.token || ''
+            } catch (e) {
+                console.warn(e)
+            }
         }
-        // 创建请求
+        // 创建请求；后续接口统一要求 Authorization: Bearer <token>
         const response = await instance.request<T>({
             url: config.url,
             method: config.method || 'GET',
             data: config.data || {},
             params: config.params || {},
-            headers: {
-                Authorization: config.token || token,
-            },
+            headers: token ? { Authorization: `Bearer ${token}` } : {},
         })
         return response.data
     } catch (error: any) {

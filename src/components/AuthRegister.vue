@@ -17,7 +17,6 @@ const initialValues = ref({
     username: '',
     email: '',
     password: '',
-    isAccepted: false,
 })
 
 const registerData = ref({
@@ -26,9 +25,10 @@ const registerData = ref({
     name: '',
     email: '',
     password: '',
-    role: '会员',
-    isAccepted: false,
 })
+
+// 用户协议勾选
+const isAccepted = ref(false)
 
 const registerSchema = z.object({
     student_id: z.string().min(1, { message: '请填写学号' }).regex(/^\d+$/, { message: '学号必须为数字' }),
@@ -36,20 +36,30 @@ const registerSchema = z.object({
     username: z.string().min(1, { message: '请填写用户名' }),
     email: z.email({ message: '邮箱格式不正确' }),
     password: z.string().min(1, { message: '请填写密码' }),
-    isAccepted: z.literal(true),
 })
 const registerResolver = zodResolver(registerSchema)
 
 async function onRegister() {
+    if (!isAccepted.value) {
+        setToast('warn', '无法注册', '请先阅读并同意《用户协议》')
+        return
+    }
+
     if (!registerSchema.safeParse(registerData.value).success) {
         return
     }
 
     try {
         const resp = await request({
-            url: '/user/register',
+            url: '/auth/register',
             method: 'POST',
-            data: registerData.value,
+            data: {
+                student_id: registerData.value.student_id,
+                username: registerData.value.username,
+                name: registerData.value.name,
+                email: registerData.value.email,
+                password: registerData.value.password,
+            },
         })
 
         if (resp.code == 200) {
@@ -148,7 +158,7 @@ async function onRegister() {
             </Message>
         </div>
         <div class="input-box">
-            <Checkbox v-model="registerData.isAccepted" input-id="isAccepted" name="isAccepted" binary />
+            <Checkbox v-model="isAccepted" input-id="isAccepted" name="isAccepted" binary />
             <label for="isAccepted">&nbsp;&nbsp;我已阅读并同意<a href="#" target="_blank">《用户协议》</a></label>
         </div>
         <br />

@@ -16,18 +16,19 @@ const router = useRouter()
 const emit = defineEmits(['forgot'])
 
 const initialValues = ref({
-    username: '',
+    account: '',
     password: '',
     isAccepted: false,
 })
 
 const loginData = ref({
-    username: '',
+    account: '',
     password: '',
+    device: 'web',
 })
 
 const loginSchema = z.object({
-    username: z.string().min(1, { message: '请填写用户名' }),
+    account: z.string().min(1, { message: '请填写用户名' }),
     password: z.string().min(1, { message: '请填写密码' }),
     isAccepted: z.literal(true),
 })
@@ -40,13 +41,24 @@ async function onLogin() {
 
     try {
         const resp = await request({
-            url: '/user/login',
+            url: '/auth/login',
             method: 'POST',
-            data: loginData.value,
+            data: {
+                account: loginData.value.account,
+                password: loginData.value.password,
+                device: loginData.value.device,
+            },
         })
 
         if (resp.code == 200) {
             cookies.set('token', resp.data.token, {
+                expires: 31,
+                secure: true,
+                sameSite: 'Lax',
+                path: '/',
+            })
+            // 刷新令牌单独持久化，供后续刷新流程使用（TODO: 接入刷新接口）
+            cookies.set('refresh_token', resp.data.refresh_token, {
                 expires: 31,
                 secure: true,
                 sameSite: 'Lax',
@@ -69,12 +81,12 @@ async function onLogin() {
             <FloatLabel variant="on">
                 <IconField>
                     <InputIcon class="pi pi-users" />
-                    <InputText v-model="loginData.username" name="username" size="large" class="input-box" />
+                    <InputText v-model="loginData.account" name="account" size="large" class="input-box" />
                 </IconField>
                 <label for="on_label">用户名</label>
             </FloatLabel>
             <Message severity="error" size="small" variant="simple">
-                <span v-if="$form.username?.invalid">{{ $form.username.error?.message }}</span
+                <span v-if="$form.account?.invalid">{{ $form.account.error?.message }}</span
                 >&nbsp;
             </Message>
         </div>

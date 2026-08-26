@@ -25,7 +25,8 @@ async function onLogout() {
     await request({ url: '/user/logout', method: 'POST' })
 
     cookies.remove('token', { path: '/' })
-    authStore.$patch({ token: '', isAuthed: false, userInfo: null })
+    cookies.remove('refresh_token', { path: '/' })
+    authStore.$patch({ token: '', refreshToken: '', isAuthed: false, userInfo: null })
 
     setToast('success', '已登出')
     router.push('/auth')
@@ -54,7 +55,7 @@ const userItems = [
         <div class="right">
             <router-link to="#">比赛中心</router-link>
             <div v-if="authStore.isAuthed" class="user" @click="userMenu?.toggle($event)">
-                <img :src="authStore.userInfo.avatar" alt="用户头像" />
+                <img :src="authStore.userInfo.avatar?.url" alt="用户头像" />
                 {{ authStore.userInfo.username }}
             </div>
             <Menu ref="userMenu" :model="userItems" class="header-menu" popup />
