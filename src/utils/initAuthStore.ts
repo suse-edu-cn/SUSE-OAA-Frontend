@@ -25,6 +25,13 @@ export async function initAuthStore() {
                 authStore.userInfo = stateResp.data
                 authStore.userInfo.avatar = stateResp.data.avatar || { uri: '', url: '' }
                 authStore.userInfo.department = stateResp.data.department || '未设置职位'
+                // cookie 存储 user_id，以防 token 过期后刷新
+                cookies.set('user_id', String(stateResp.data.user_id), {
+                    expires: 20,
+                    secure: true,
+                    sameSite: 'Lax',
+                    path: '/',
+                })
             } else {
                 authStore.token = ''
                 cookies.remove('token')

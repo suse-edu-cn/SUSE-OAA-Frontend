@@ -26,6 +26,7 @@ async function onLogout() {
 
     cookies.remove('token', { path: '/' })
     cookies.remove('refresh_token', { path: '/' })
+    cookies.remove('user_id', { path: '/' })
     authStore.$patch({ token: '', refreshToken: '', isAuthed: false, userInfo: null })
 
     setToast('success', '已登出')

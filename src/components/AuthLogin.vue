@@ -48,14 +48,14 @@ async function onLogin() {
 
         if (resp.code == 200) {
             cookies.set('token', resp.data.token, {
-                expires: 31,
+                expires: 20,
                 secure: true,
                 sameSite: 'Lax',
                 path: '/',
             })
             // 刷新令牌单独持久化，供后续刷新流程使用（TODO: 接入刷新接口）
             cookies.set('refresh_token', resp.data.refresh_token, {
-                expires: 31,
+                expires: 20,
                 secure: true,
                 sameSite: 'Lax',
                 path: '/',
