@@ -11,7 +11,7 @@ import setToast from '@/utils/setToast'
 
 const authStore = useAuthStore()
 const router = useRouter()
-const userMenu = ref()
+const userMenu = ref() // 登录状态点击用户头像的下拉菜单
 
 defineOptions({ name: 'PageHeader' })
 
@@ -22,7 +22,11 @@ onMounted(async () => {
 })
 
 async function onLogout() {
-    await request({ url: '/user/logout', method: 'POST' })
+    await request({
+        url: '/auth/logout',
+        method: 'POST',
+        data: { device: 'web' },
+    })
 
     cookies.remove('token', { path: '/' })
     cookies.remove('refresh_token', { path: '/' })
