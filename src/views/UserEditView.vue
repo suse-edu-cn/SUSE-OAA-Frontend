@@ -13,6 +13,7 @@ import { useAuthStore } from '@/stores/auth'
 import { initAuthStore } from '@/utils/initAuthStore'
 import setToast from '@/utils/setToast'
 import request from '@/utils/request'
+import uploadImage from '@/utils/uploadImage'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -27,9 +28,8 @@ const resolver = zodResolver(infoSchema)
 const updateData = ref({ ...userInfo })
 const showChangePass = ref(false) // 修改密码弹窗
 
-// 处理头像
-// userInfo 提供的头像链接是签名的 URL，此处需要转换为相对路径 URI
-updateData.value.avatar = decodeURIComponent(userInfo.avatar).split('aliyuncs.com/')[1].split('?')[0]
+// 处理头像：uri 为相对路径，用于更新请求
+updateData.value.avatar = userInfo.avatar?.uri || ''
 
 async function onUpdateData() {
     if (!infoSchema.safeParse(updateData.value).success) {
@@ -38,12 +38,16 @@ async function onUpdateData() {
 
     try {
         const resp = await request({
-            url: '/user/update',
+            url: '/user/me/update',
             method: 'POST',
-            data: updateData.value,
+            data: {
+                username: updateData.value.username,
+                email: updateData.value.email,
+                avatar: updateData.value.avatar,
+            },
         })
         if (resp.code == 200) {
-            setToast('success', '修改成功', '你的个人信息已更新！')
+            setToast('success', '修改成功', '个人信息已更新！')
             await initAuthStore()
             router.push('/user')
         } else {
@@ -55,43 +59,23 @@ async function onUpdateData() {
 }
 
 const fileInput = ref(null)
-const avatar = ref(userInfo.avatar)
+const avatar = ref(userInfo.avatar?.url || '')
 
 async function uploadAvatar(event) {
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp']
     const target = event.target
     const file = target.files[0]
 
     if (!file) return
 
-    if (!allowedTypes.includes(file.type)) {
-        setToast('warn', '格式错误', '请选择符合要求的图片')
-        return
-    }
-    if (file.size > 5 * 1024 * 1024) {
-        setToast('warn', '文件过大', '请选择符合要求的图片')
+    const uploaded = await uploadImage(file, { scene: 'avatar' })
+    if (!uploaded) {
+        target.value = ''
         return
     }
 
-    const formData = new FormData()
-    formData.append('Image', file)
-
-    try {
-        const resp = await request({
-            url: '/user/uploadimg',
-            method: 'POST',
-            data: formData,
-        })
-        if (resp.code == 200) {
-            updateData.value.avatar = decodeURIComponent(resp.data.avatarUrl).split('aliyuncs.com/')[1].split('?')[0]
-            avatar.value = resp.data.avatarUrl
-            setToast('success', '头像更新成功', '')
-        } else {
-            setToast('error', '头像上传失败', resp.message)
-        }
-    } catch (err) {
-        setToast('error', '头像上传失败', err.response?.message || '未知错误，请联系负责后端的同学')
-    }
+    updateData.value.avatar = uploaded.uri
+    avatar.value = uploaded.url || avatar.value
+    setToast('success', '头像更新成功', '')
 
     target.value = ''
 }
@@ -123,11 +107,11 @@ onMounted(() => {
                         <span class="pi pi-upload"></span>
                     </div>
                 </div>
-                <div class="tip">头像支持 JPG、PNG、WEBP 格式，大小不得超过 4MB</div>
+                <div class="tip">头像支持 JPG、PNG、GIF、WEBP、AVIF 格式，大小不得超过 4MB</div>
                 <input
                     ref="fileInput"
                     type="file"
-                    accept=".jpg,.jpeg,.png,.webp"
+                    accept=".jpg,.jpeg,.png,.gif,.webp,.avif"
                     style="display: none"
                     @change="uploadAvatar"
                 />
