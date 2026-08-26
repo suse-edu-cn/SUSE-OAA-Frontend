@@ -53,13 +53,7 @@ async function onRegister() {
         const resp = await request({
             url: '/auth/register',
             method: 'POST',
-            data: {
-                student_id: registerData.value.student_id,
-                username: registerData.value.username,
-                name: registerData.value.name,
-                email: registerData.value.email,
-                password: registerData.value.password,
-            },
+            data: registerData.value,
         })
 
         if (resp.code == 200) {

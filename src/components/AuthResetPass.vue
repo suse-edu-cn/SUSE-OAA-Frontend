@@ -5,6 +5,7 @@ import { Button, FloatLabel, IconField, InputIcon, InputText, Message } from 'pr
 import { Form } from '@primevue/forms'
 import { zodResolver } from '@primevue/forms/resolvers/zod'
 
+import request from '@/utils/request'
 import setToast from '@/utils/setToast'
 
 defineProps({
@@ -18,43 +19,71 @@ defineProps({
 const emit = defineEmits(['switchMode'])
 
 const initialValues = ref({
-    email: '',
+    account: '',
     code: '',
+    password: '',
+    confirmPassword: '',
 })
 
 const resetData = ref({
-    email: '',
+    account: '',
     code: '',
+    password: '',
+    confirmPassword: '',
 })
 
-const resetSchema = z.object({
-    email: z.email({ message: '邮箱格式不正确' }),
-    code: z.string().regex(/^\d{6}$/, { message: '验证码格式错误' }),
-})
+const resetSchema = z
+    .object({
+        account: z.string().min(1, { message: '请填写用户名、学号或邮箱' }),
+        code: z.string().regex(/^\d{6}$/, { message: '验证码格式错误' }),
+        password: z.string().min(1, { message: '请填写新密码' }),
+        confirmPassword: z.string().min(1, { message: '请再次输入新密码' }),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+        message: '两次输入的新密码不一致',
+        path: ['confirmPassword'],
+    })
 const resetResolver = zodResolver(resetSchema)
 
 // 发送验证码
 const countdown = ref(0)
 let countdownTimer = null
 
-function sendCode() {
+async function sendCode() {
     if (countdown.value > 0) {
         return
     }
 
-    // TODO: 后续接入后端，在此请求发送验证码
-    if (resetSchema.shape.email.safeParse(resetData.value.email).success) {
-        setToast('success', '验证码已发送', '请前往邮箱查收')
-        countdown.value = 60
-        countdownTimer = setInterval(() => {
-            countdown.value--
-            if (countdown.value <= 0) {
-                clearInterval(countdownTimer)
-                countdownTimer = null
-            }
-        }, 1000)
-    } else {
-        setToast('warn', '无法发送验证码', '请先填写正确的邮箱')
+    if (!resetSchema.shape.account.safeParse(resetData.value.account).success) {
+        setToast('warn', '无法发送验证码', '请先填写用户名、学号或邮箱')
+        return
+    }
+
+    try {
+        const resp = await request({
+            url: '/auth/password/reset',
+            method: 'POST',
+            data: {
+                account: resetData.value.account,
+                scene: 'reset_password',
+            },
+        })
+
+        if (resp.code == 200) {
+            setToast('success', '验证码已发送', '请前往账号绑定的邮箱查收')
+            countdown.value = 60
+            countdownTimer = setInterval(() => {
+                countdown.value--
+                if (countdown.value <= 0) {
+                    clearInterval(countdownTimer)
+                    countdownTimer = null
+                }
+            }, 1000)
+        } else {
+            setToast('error', '发送失败', resp.message)
+        }
+    } catch (err) {
+        setToast('error', '发送失败', err.response?.data?.message || '未知错误，请联系负责后端的同学')
     }
 }
 
@@ -64,14 +93,31 @@ onUnmounted(() => {
     }
 })
 
-// TODO: 后续接入后端，在此发送重置密码请求
 async function onReset() {
     if (!resetSchema.safeParse(resetData.value).success) {
         return
     }
 
-    setToast('success', '重置成功', '请使用新密码登录')
-    emit('switchMode')
+    try {
+        const resp = await request({
+            url: '/auth/password/reset',
+            method: 'POST',
+            data: {
+                account: resetData.value.account,
+                code: resetData.value.code,
+                password: resetData.value.password,
+            },
+        })
+
+        if (resp.code == 200) {
+            setToast('success', '重置成功', '请使用新密码登录')
+            emit('switchMode')
+        } else {
+            setToast('error', '重置失败', resp.message)
+        }
+    } catch (err) {
+        setToast('error', '重置失败', err.response?.data?.message || '未知错误，请联系负责后端的同学')
+    }
 }
 </script>
 
@@ -80,13 +126,13 @@ async function onReset() {
         <div class="input-box">
             <FloatLabel variant="on">
                 <IconField>
-                    <InputIcon class="pi pi-envelope" />
-                    <InputText v-model="resetData.email" name="email" size="large" class="input-box" />
+                    <InputIcon class="pi pi-user" />
+                    <InputText v-model="resetData.account" name="account" size="large" class="input-box" />
                 </IconField>
-                <label for="on_label">邮箱</label>
+                <label for="on_label">用户名 / 学号 / 邮箱</label>
             </FloatLabel>
             <Message severity="error" size="small" variant="simple">
-                <span v-if="$form.email?.invalid">{{ $form.email.error?.message }}</span
+                <span v-if="$form.account?.invalid">{{ $form.account.error?.message }}</span
                 >&nbsp;
             </Message>
         </div>
@@ -110,6 +156,46 @@ async function onReset() {
             </div>
             <Message severity="error" size="small" variant="simple">
                 <span v-if="$form.code?.invalid">{{ $form.code.error?.message }}</span
+                >&nbsp;
+            </Message>
+        </div>
+
+        <div class="input-box">
+            <FloatLabel variant="on">
+                <IconField>
+                    <InputIcon class="pi pi-key" />
+                    <InputText
+                        v-model="resetData.password"
+                        name="password"
+                        type="password"
+                        size="large"
+                        class="input-box"
+                    />
+                </IconField>
+                <label for="on_label">新密码</label>
+            </FloatLabel>
+            <Message severity="error" size="small" variant="simple">
+                <span v-if="$form.password?.invalid">{{ $form.password.error?.message }}</span
+                >&nbsp;
+            </Message>
+        </div>
+
+        <div class="input-box">
+            <FloatLabel variant="on">
+                <IconField>
+                    <InputIcon class="pi pi-shield" />
+                    <InputText
+                        v-model="resetData.confirmPassword"
+                        name="confirmPassword"
+                        type="password"
+                        size="large"
+                        class="input-box"
+                    />
+                </IconField>
+                <label for="on_label">确认新密码</label>
+            </FloatLabel>
+            <Message severity="error" size="small" variant="simple">
+                <span v-if="$form.confirmPassword?.invalid">{{ $form.confirmPassword.error?.message }}</span
                 >&nbsp;
             </Message>
         </div>

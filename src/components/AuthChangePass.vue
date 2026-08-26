@@ -45,12 +45,11 @@ async function onChangePass() {
 
     try {
         const resp = await request({
-            // TODO: 端点与字段名以后端为准
-            url: '/user/changepass',
+            url: '/auth/password/update',
             method: 'POST',
             data: {
-                oldPassword: changeData.value.oldPassword,
-                newPassword: changeData.value.newPassword,
+                old_password: changeData.value.oldPassword,
+                new_password: changeData.value.newPassword,
             },
         })
 

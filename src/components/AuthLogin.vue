@@ -43,11 +43,7 @@ async function onLogin() {
         const resp = await request({
             url: '/auth/login',
             method: 'POST',
-            data: {
-                account: loginData.value.account,
-                password: loginData.value.password,
-                device: loginData.value.device,
-            },
+            data: loginData.value,
         })
 
         if (resp.code == 200) {
@@ -83,7 +79,7 @@ async function onLogin() {
                     <InputIcon class="pi pi-users" />
                     <InputText v-model="loginData.account" name="account" size="large" class="input-box" />
                 </IconField>
-                <label for="on_label">用户名</label>
+                <label for="on_label">用户名 / 邮箱 / 学号</label>
             </FloatLabel>
             <Message severity="error" size="small" variant="simple">
                 <span v-if="$form.account?.invalid">{{ $form.account.error?.message }}</span
