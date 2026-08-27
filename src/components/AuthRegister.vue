@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import { z } from 'zod'
 
@@ -9,7 +9,7 @@ import { zodResolver } from '@primevue/forms/resolvers/zod'
 import request from '@/utils/request'
 import setToast from '@/utils/setToast'
 
-const emit = defineEmits(['switchMode'])
+const emit = defineEmits<{ switchMode: [] }>()
 
 const initialValues = ref({
     student_id: '',
@@ -62,7 +62,7 @@ async function onRegister() {
         } else {
             setToast('error', '注册失败', resp.message)
         }
-    } catch (err) {
+    } catch (err: any) {
         setToast('error', '注册失败', err.response?.data?.message || '未知错误，请联系负责后端的同学')
     }
 }

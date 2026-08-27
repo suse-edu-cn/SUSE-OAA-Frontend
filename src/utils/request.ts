@@ -3,6 +3,7 @@ import cookies from 'js-cookie'
 import router from '@/router'
 
 import { useAuthStore } from '@/stores/auth'
+import type { ApiResponse } from '@/types/api'
 import setToast from './setToast'
 
 const instance = axios.create({
@@ -30,11 +31,7 @@ async function doRefresh(): Promise<boolean> {
     }
 
     try {
-        const resp = await instance.request<{
-            code: number
-            message: string
-            data: { token: string; refresh_token: string }
-        }>({
+        const resp = await instance.request<ApiResponse<{ token: string; refresh_token: string }>>({
             url: '/auth/refresh',
             method: 'POST',
             data: {
@@ -114,7 +111,7 @@ instance.interceptors.response.use(
     }
 )
 
-const request = async function <T>(config: {
+const request = async function <T = any>(config: {
     url: string
     method?: 'GET' | 'POST'
     data?: any

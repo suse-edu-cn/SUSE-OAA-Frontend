@@ -5,6 +5,7 @@
         "module": "ESNext",
         "moduleResolution": "bundler",
         "strict": true,
+        "skipLibCheck": true,
         "sourceMap": true,
         "resolveJsonModule": true,
         "esModuleInterop": true,

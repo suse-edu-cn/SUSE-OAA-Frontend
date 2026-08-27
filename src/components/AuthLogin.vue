@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { z } from 'zod'
@@ -13,7 +13,7 @@ import request from '@/utils/request'
 import setToast from '@/utils/setToast'
 
 const router = useRouter()
-const emit = defineEmits(['forgot'])
+const emit = defineEmits<{ forgot: [] }>()
 
 const initialValues = ref({
     account: '',
@@ -25,6 +25,7 @@ const loginData = ref({
     account: '',
     password: '',
     device: 'web',
+    isAccepted: false,
 })
 
 const loginSchema = z.object({
@@ -65,7 +66,7 @@ async function onLogin() {
         } else {
             setToast('error', '登录失败', resp.message)
         }
-    } catch (err) {
+    } catch (err: any) {
         setToast('error', '登录失败', err.response?.data?.message || '未知错误，请联系负责后端的同学')
     }
 }

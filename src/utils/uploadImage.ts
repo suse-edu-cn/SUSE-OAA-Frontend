@@ -1,5 +1,6 @@
 import request from './request'
 import setToast from './setToast'
+import type { ApiResponse } from '@/types/api'
 
 // 内置校验规则，不允许调用方覆盖
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/avif']
@@ -35,11 +36,7 @@ export default async function uploadImage(file: File, options: UploadOptions): P
     formData.append('scene', options.scene)
 
     try {
-        const resp = await request<{
-            code: number
-            message: string
-            data: { uri: string; url: string }
-        }>({
+        const resp = await request<ApiResponse<UploadResult>>({
             url: '/upload/image',
             method: 'POST',
             data: formData,
@@ -49,7 +46,7 @@ export default async function uploadImage(file: File, options: UploadOptions): P
         }
         setToast('error', '上传失败', resp.message)
         return null
-    } catch (err) {
+    } catch (err: any) {
         setToast('error', '上传失败', err.response?.data?.message || '未知错误，请联系负责后端的同学')
         return null
     }

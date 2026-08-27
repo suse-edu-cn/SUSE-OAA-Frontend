@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from 'primevue'
@@ -73,24 +73,27 @@ main {
 
     .left {
         display: var(--e-display);
-        flex: 1;
+        flex: 4;
         justify-content: center;
         align-items: center;
         padding: 3rem;
 
         img {
-            width: 19vw;
+            width: max(240px, 70%);
+            max-width: 300px;
+            max-height: 400px;
             height: auto;
         }
     }
 
     .right {
         display: flex;
-        flex: 1;
+        flex: 6;
         flex-direction: column;
         justify-content: center;
         align-items: center;
         font-size: 15px;
+        max-width: 600px;
 
         h2 {
             width: var(--auth-input-width);

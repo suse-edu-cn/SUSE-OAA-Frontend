@@ -11,7 +11,7 @@
 :root,
 :host {
     --e-display: flex;
-    --e-content-h-padding: 15%;
+    --e-content-h-padding: max(5%, 30px);
     --e-content-h-max-width: 1400px;
     --e-color-theme: var(--p-emerald-500);
     --e-border-radius: 8px;
@@ -29,6 +29,12 @@
         --e-content-h-padding: 5%;
         --e-banner-height: auto;
         --e-banner-padding: 3.5rem var(--e-content-h-padding) 2.5rem;
+    }
+}
+// 针对大屏设备的变量
+@media screen and (min-width: 1300px) {
+    :root {
+        --e-content-h-padding: 12.5%;
     }
 }
 

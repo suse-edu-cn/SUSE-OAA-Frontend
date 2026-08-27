@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { z } from 'zod'
@@ -25,11 +25,15 @@ const infoSchema = z.object({
     avatar: z.string().min(1, { message: '请上传有效的头像' }),
 })
 const resolver = zodResolver(infoSchema)
-const updateData = ref({ ...userInfo })
+// updateData 仅承载表单字段：avatar 保存相对路径 uri，供更新接口使用
+const updateData = ref({
+    student_id: userInfo?.student_id ?? '',
+    name: userInfo?.name ?? '',
+    username: userInfo?.username ?? '',
+    email: userInfo?.email ?? '',
+    avatar: userInfo?.avatar?.uri ?? '',
+})
 const showChangePass = ref(false) // 修改密码弹窗
-
-// 处理头像：uri 为相对路径，用于更新请求
-updateData.value.avatar = userInfo.avatar?.uri || ''
 
 async function onUpdateData() {
     if (!infoSchema.safeParse(updateData.value).success) {
@@ -53,17 +57,17 @@ async function onUpdateData() {
         } else {
             setToast('error', '修改失败', resp.message)
         }
-    } catch (err) {
+    } catch (err: any) {
         setToast('error', '修改失败', err.response.data.message || '未知错误，请联系负责后端的同学')
     }
 }
 
-const fileInput = ref(null)
-const avatar = ref(userInfo.avatar?.url || '')
+const fileInput = ref<HTMLInputElement | null>(null)
+const avatar = ref(userInfo?.avatar?.url || '')
 
-async function uploadAvatar(event) {
-    const target = event.target
-    const file = target.files[0]
+async function uploadAvatar(event: Event) {
+    const target = event.target as HTMLInputElement
+    const file = target.files?.[0]
 
     if (!file) return
 
@@ -96,12 +100,12 @@ onMounted(() => {
     <main>
         <h1 class="e-title">编辑个人信息</h1>
 
-        <Form v-slot="$form" :resolver="resolver" :initial-values="userInfo" @submit="onUpdateData">
+        <Form v-slot="$form" :resolver="resolver" :initial-values="userInfo ?? undefined" @submit="onUpdateData">
             <!-- 头像 -->
             <div class="avatar">
                 <div>设置头像</div>
                 <br />
-                <div class="wrapper" @click="fileInput.click()">
+                <div class="wrapper" @click="fileInput?.click()">
                     <img :src="avatar" alt="用户头像" />
                     <div class="overlay">
                         <span class="pi pi-upload"></span>

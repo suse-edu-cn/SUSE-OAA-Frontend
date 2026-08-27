@@ -1,12 +1,13 @@
-<script setup>
+<script setup lang="ts">
 import { useRoute } from 'vue-router'
 import { Menu } from 'primevue'
+import type { MenuItem } from 'primevue/menuitem'
 
 defineOptions({ name: 'PageDrawer' })
 
 const route = useRoute()
 
-const links = [
+const links: MenuItem[] = [
     {
         separator: true,
     },

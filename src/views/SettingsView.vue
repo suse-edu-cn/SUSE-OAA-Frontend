@@ -1,6 +1,6 @@
-<script setup>
-import { version } from '@/../package.json'
-const gitVersion = __GIT_VERSION__
+<script setup lang="ts">
+import { version } from '../../package.json'
+const gitVersion: string = __GIT_VERSION__
 </script>
 
 <template>

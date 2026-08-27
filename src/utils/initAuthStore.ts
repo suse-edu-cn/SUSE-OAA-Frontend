@@ -1,6 +1,9 @@
 import cookies from 'js-cookie'
+
 import request from './request'
 import { useAuthStore } from '@/stores/auth'
+import type { ApiResponse } from '@/types/api'
+import type { UserInfo } from '@/types/user'
 
 export async function initAuthStore() {
     const authStore = useAuthStore()
@@ -11,22 +14,20 @@ export async function initAuthStore() {
         authStore.token = token
         authStore.refreshToken = cookies.get('refresh_token') || ''
         try {
-            const stateResp: {
-                code: number
-                data: any
-                message: string
-            } = await request({
+            const stateResp = await request<ApiResponse<UserInfo>>({
                 url: '/user/me',
                 method: 'GET',
                 token,
             })
             if (stateResp.code == 200) {
+                const info: UserInfo = { ...stateResp.data }
+                info.avatar = stateResp.data.avatar || { uri: '', url: '' }
+                info.department = stateResp.data.department || '未设置职位'
+
                 authStore.isAuthed = true
-                authStore.userInfo = stateResp.data
-                authStore.userInfo.avatar = stateResp.data.avatar || { uri: '', url: '' }
-                authStore.userInfo.department = stateResp.data.department || '未设置职位'
+                authStore.userInfo = info
                 // cookie 存储 user_id，以防 token 过期后刷新
-                cookies.set('user_id', String(stateResp.data.user_id), {
+                cookies.set('user_id', String(info.user_id), {
                     expires: 20,
                     secure: true,
                     sameSite: 'Lax',

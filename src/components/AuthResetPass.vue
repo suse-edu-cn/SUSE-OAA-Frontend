@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { onUnmounted, ref } from 'vue'
 import { z } from 'zod'
 import { Button, FloatLabel, IconField, InputIcon, InputText, Message } from 'primevue'
@@ -8,15 +8,16 @@ import { zodResolver } from '@primevue/forms/resolvers/zod'
 import request from '@/utils/request'
 import setToast from '@/utils/setToast'
 
-defineProps({
-    // 0: AuthView 登录页的重置流程；1: 用户编辑页弹窗内的重置流程
-    scene: {
-        type: Number,
-        default: 0,
-    },
-})
+withDefaults(
+    defineProps<{
+        // 0: AuthView 登录页
+        // 1: 用户编辑页弹窗内
+        scene?: number
+    }>(),
+    { scene: 0 }
+)
 
-const emit = defineEmits(['switchMode'])
+const emit = defineEmits<{ switchMode: [] }>()
 
 const initialValues = ref({
     account: '',
@@ -47,7 +48,7 @@ const resetResolver = zodResolver(resetSchema)
 
 // 发送验证码
 const countdown = ref(0)
-let countdownTimer = null
+let countdownTimer: ReturnType<typeof setInterval> | null = null
 
 async function sendCode() {
     if (countdown.value > 0) {
@@ -74,7 +75,7 @@ async function sendCode() {
             countdown.value = 60
             countdownTimer = setInterval(() => {
                 countdown.value--
-                if (countdown.value <= 0) {
+                if (countdown.value <= 0 && countdownTimer) {
                     clearInterval(countdownTimer)
                     countdownTimer = null
                 }
@@ -82,7 +83,7 @@ async function sendCode() {
         } else {
             setToast('error', '发送失败', resp.message)
         }
-    } catch (err) {
+    } catch (err: any) {
         setToast('error', '发送失败', err.response?.data?.message || '未知错误，请联系负责后端的同学')
     }
 }
@@ -115,7 +116,7 @@ async function onReset() {
         } else {
             setToast('error', '重置失败', resp.message)
         }
-    } catch (err) {
+    } catch (err: any) {
         setToast('error', '重置失败', err.response?.data?.message || '未知错误，请联系负责后端的同学')
     }
 }

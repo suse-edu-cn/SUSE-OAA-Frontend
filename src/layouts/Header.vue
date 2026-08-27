@@ -1,7 +1,8 @@
-<script setup>
+<script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import { Menu } from 'primevue'
+import type { MenuItem } from 'primevue/menuitem'
 import cookies from 'js-cookie'
 
 import { useAuthStore } from '@/stores/auth'
@@ -11,7 +12,8 @@ import setToast from '@/utils/setToast'
 
 const authStore = useAuthStore()
 const router = useRouter()
-const userMenu = ref() // 登录状态点击用户头像的下拉菜单
+// 登录状态点击用户头像的下拉菜单
+const userMenu = ref<{ toggle: (event: Event) => void } | null>(null)
 
 defineOptions({ name: 'PageHeader' })
 
@@ -33,11 +35,11 @@ async function onLogout() {
     cookies.remove('user_id', { path: '/' })
     authStore.$patch({ token: '', refreshToken: '', isAuthed: false, userInfo: null })
 
-    setToast('success', '已登出')
+    setToast('success', '已登出', '')
     router.push('/auth')
 }
 
-const userItems = [
+const userItems: MenuItem[] = [
     {
         label: '个人主页',
         icon: 'pi pi-user',
@@ -59,7 +61,7 @@ const userItems = [
         <div class="grow"></div>
         <div class="right">
             <router-link to="#">比赛中心</router-link>
-            <div v-if="authStore.isAuthed" class="user" @click="userMenu?.toggle($event)">
+            <div v-if="authStore.userInfo" class="user" @click="userMenu?.toggle($event)">
                 <img :src="authStore.userInfo.avatar?.url" alt="用户头像" />
                 {{ authStore.userInfo.username }}
             </div>

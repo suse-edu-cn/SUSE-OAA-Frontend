@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { onMounted } from 'vue'
 import { useRouter, RouterLink } from 'vue-router'
 
@@ -25,8 +25,8 @@ onMounted(async () => {
 </script>
 
 <template>
-    <!-- 如果登录状态正常，就显示包含信息的 banner -->
-    <div class="e-banner" style="background-color: var(--p-emerald-50)" v-if="authStore.isAuthed">
+    <!-- 如果登录状态正常，就显示信息 banner；以 userInfo 非空为条件，模板内类型自动收窄 -->
+    <div class="e-banner" style="background-color: var(--p-emerald-50)" v-if="authStore.userInfo">
         <img :src="authStore.userInfo.avatar?.url" alt="用户头像" srcset="" />
         <div class="info">
             <div class="title">{{ authStore.userInfo.username }}</div>

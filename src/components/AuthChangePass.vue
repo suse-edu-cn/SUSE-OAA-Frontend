@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import { z } from 'zod'
 import { Button, FloatLabel, IconField, InputIcon, InputText, Message } from 'primevue'
@@ -9,7 +9,7 @@ import AuthResetPass from '@/components/AuthResetPass.vue'
 import request from '@/utils/request'
 import setToast from '@/utils/setToast'
 
-const emit = defineEmits(['switchMode'])
+const emit = defineEmits<{ switchMode: [] }>()
 
 // change 为修改密码表单，reset 为忘记原密码时的重置流程
 const mode = ref('change')
@@ -59,7 +59,7 @@ async function onChangePass() {
         } else {
             setToast('error', '修改失败', resp.message)
         }
-    } catch (err) {
+    } catch (err: any) {
         setToast('error', '修改失败', err.response?.data?.message || '未知错误，请联系负责后端的同学')
     }
 }

@@ -6,8 +6,8 @@ import { execSync } from 'child_process'
 // 获取编译版本
 let gitVersion = 'unknown'
 try {
-    let gitHash = execSync('git rev-parse --short=7 HEAD').toString().trim()
-    let gitBranch = execSync('git rev-parse --abbrev-ref HEAD').toString().trim()
+    const gitHash = execSync('git rev-parse --short=7 HEAD').toString().trim()
+    const gitBranch = execSync('git rev-parse --abbrev-ref HEAD').toString().trim()
     gitVersion = `${gitHash}@${gitBranch}`
 } catch {
     console.warn('无法获取 git 版本信息')
