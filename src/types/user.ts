@@ -22,3 +22,9 @@ export interface UserListData {
     total: number
     list: UserInfo[]
 }
+
+/** 批量修改用户 /user/batch */
+export interface UserBatchErrorItem {
+    name: string
+    error_message: string
+}
