@@ -1,3 +1,4 @@
+<!-- 编辑个人信息页 /user/edit -->
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'

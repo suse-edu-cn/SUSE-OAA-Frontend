@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import cookies from 'js-cookie'
 
 import setToast from '@/utils/setToast'
-import HomeView from '@/views/HomeView.vue'
+import HomeView from '@/views/AppHome.vue'
 
 const router = createRouter({
     history: createWebHistory(),
@@ -10,15 +10,15 @@ const router = createRouter({
         { path: '/', component: HomeView },
 
         // 个人页面相关
-        { path: '/auth', component: () => import('@/views/AuthView.vue') },
+        { path: '/auth', component: () => import('@/views/UserAuth.vue') },
         {
             path: '/user',
-            component: () => import('@/views/UserView.vue'),
+            component: () => import('@/views/UserHome.vue'),
             meta: { requiresAuth: true },
         },
         {
             path: '/user/edit',
-            component: () => import('@/views/UserEditView.vue'),
+            component: () => import('@/views/UserEdit.vue'),
             meta: { requiresAuth: true },
         },
         {
@@ -28,7 +28,7 @@ const router = createRouter({
         },
         {
             path: '/settings',
-            component: () => import('@/views/SettingsView.vue'),
+            component: () => import('@/views/AppSettings.vue'),
             meta: { requiresAuth: true },
         },
     ],

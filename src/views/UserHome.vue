@@ -1,3 +1,4 @@
+<!-- 个人信息页 /user -->
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { useRouter, RouterLink } from 'vue-router'

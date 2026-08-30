@@ -62,7 +62,7 @@ async function sendCode() {
 
     try {
         const resp = await request({
-            url: '/auth/password/reset',
+            url: '/auth/send',
             method: 'POST',
             data: {
                 account: resetData.value.account,
