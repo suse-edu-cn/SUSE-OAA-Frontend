@@ -5,14 +5,12 @@ import { Button, Checkbox, Column, DataTable, Dialog, IconField, InputIcon, Inpu
 
 import request from '@/utils/request'
 import setToast from '@/utils/setToast'
+import { useOrgStore } from '@/stores/org'
 import type { ApiResponse } from '@/types/api'
 import type { UserListData, UserInfo } from '@/types/user'
 
 // 部门和职位的下拉菜单
-const DEPARTMENTS = ['算法竞赛部', '组织宣传部', '秘书处', '理事会', '项目实践部', '开放原子开源协会'] as const
-const ROLES = ['开发者', '会长', '副会长', '部长', '副部长', '干事', '会员'] as const
-const departmentOptions = DEPARTMENTS.map((d) => ({ label: d, value: d }))
-const roleOptions = ROLES.map((r) => ({ label: r, value: r }))
+const orgStore = useOrgStore()
 
 const users = ref<UserInfo[]>([])
 const loading = ref(true)
@@ -69,17 +67,21 @@ async function onDelete() {
 }
 
 onMounted(async () => {
-    const resp = await request<ApiResponse<UserListData>>({
-        url: '/user/list',
-        method: 'GET',
-        params: { is_all: true },
-    })
+    const [userResp] = await Promise.all([
+        request<ApiResponse<UserListData>>({
+            url: '/user/list',
+            method: 'GET',
+            params: { is_all: true },
+        }),
+        orgStore.ensureLoaded(),
+    ])
 
-    if (resp?.code == 200) {
-        users.value = resp.data.list
+    if (userResp?.code == 200) {
+        users.value = userResp.data.list
     } else {
-        setToast('error', '获取用户列表失败', resp?.message || '未知错误，请联系负责后端的同学')
+        setToast('error', '获取用户列表失败', userResp?.message || '未知错误，请联系负责后端的同学')
     }
+
     loading.value = false
 })
 </script>
@@ -100,17 +102,17 @@ onMounted(async () => {
                 <div class="filter-bar">
                     <Select
                         v-model="filterDepartment"
-                        :options="departmentOptions"
-                        option-label="label"
-                        option-value="value"
+                        :options="orgStore.departments"
+                        option-label="name"
+                        option-value="name"
                         placeholder="全部部门"
                         show-clear
                     />
                     <Select
                         v-model="filterRole"
-                        :options="roleOptions"
-                        option-label="label"
-                        option-value="value"
+                        :options="orgStore.roles"
+                        option-label="name"
+                        option-value="name"
                         placeholder="全部职位"
                         show-clear
                     />
