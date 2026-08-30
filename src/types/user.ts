@@ -5,6 +5,7 @@ export interface UserAvatar {
     url: string
 }
 
+/** 当前用户信息 /user/me */
 export interface UserInfo {
     user_id: number
     student_id: string
@@ -14,4 +15,10 @@ export interface UserInfo {
     email: string
     department: string
     role: string
+}
+
+/** 用户列表 /user/list */
+export interface UserListData {
+    total: number
+    list: UserInfo[]
 }

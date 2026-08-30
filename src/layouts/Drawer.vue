@@ -27,6 +27,19 @@ const links: MenuItem[] = [
         ],
     },
     {
+        separator: true,
+    },
+    {
+        label: '用户管理',
+        items: [
+            {
+                label: '用户管理',
+                icon: 'pi pi-users',
+                to: '/user/manage',
+            },
+        ],
+    },
+    {
         label: '设置',
         items: [
             {
