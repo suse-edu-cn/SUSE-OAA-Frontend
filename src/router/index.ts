@@ -9,7 +9,7 @@ const router = createRouter({
     routes: [
         { path: '/', component: HomeView },
 
-        // 个人页面相关
+        // 个人
         { path: '/auth', component: () => import('@/views/UserAuth.vue') },
         {
             path: '/user',
@@ -21,11 +21,18 @@ const router = createRouter({
             component: () => import('@/views/UserEdit.vue'),
             meta: { requiresAuth: true },
         },
+        // 管理
         {
-            path: '/user/manage',
-            component: () => import('@/views/UserManage.vue'),
+            path: '/manage/users',
+            component: () => import('@/views/ManageUsers.vue'),
             meta: { requiresAuth: true },
         },
+        {
+            path: '/manage/org',
+            component: () => import('@/views/ManageOrg.vue'),
+            meta: { requiresAuth: true },
+        },
+        // 设置
         {
             path: '/settings',
             component: () => import('@/views/AppSettings.vue'),

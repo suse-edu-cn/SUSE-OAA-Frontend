@@ -12,7 +12,7 @@ const links: MenuItem[] = [
         separator: true,
     },
     {
-        label: '个人设定',
+        label: '个人',
         items: [
             {
                 label: '主页',
@@ -30,12 +30,17 @@ const links: MenuItem[] = [
         separator: true,
     },
     {
-        label: '用户管理',
+        label: '管理',
         items: [
             {
                 label: '用户管理',
                 icon: 'pi pi-users',
-                to: '/user/manage',
+                to: '/manage/users',
+            },
+            {
+                label: '组织管理',
+                icon: 'pi pi-sitemap',
+                to: '/manage/org',
             },
         ],
     },
