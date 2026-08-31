@@ -23,9 +23,11 @@ const route = useRoute()
         <Drawer v-if="!(route.path === '/' || route.path === '/auth')" />
         <section class="e-view-wrapper">
             <div class="e-view">
-                <RouterView />
+                <div class="e-view-content">
+                    <RouterView />
+                </div>
+                <Footer />
             </div>
-            <Footer />
         </section>
     </div>
 </template>
@@ -49,5 +51,16 @@ const route = useRoute()
 .e-view {
     flex: 1;
     min-height: 0;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.e-view-content {
+    flex: 1 0 auto;
+}
+
+.e-view > footer {
+    flex-shrink: 0;
 }
 </style>

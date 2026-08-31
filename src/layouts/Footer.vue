@@ -15,6 +15,7 @@ footer {
     font-size: 14px;
     padding: 16px 20px;
     border-top: 1px solid #ddd;
+    margin-top: 16px;
 
     p {
         margin: 0;
