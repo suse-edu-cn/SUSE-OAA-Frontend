@@ -1,8 +1,9 @@
-<!-- 用户管理页 /user/manage -->
+<!-- 用户管理页 /manage/users -->
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue'
-import { Button, Checkbox, Column, DataTable, Dialog, IconField, InputIcon, InputText, Select } from 'primevue'
+import { Button, Column, DataTable, IconField, InputIcon, InputText, Select } from 'primevue'
 
+import ConfirmDialog from '@/components/ConfirmDialog.vue'
 import request from '@/utils/request'
 import setToast from '@/utils/setToast'
 import { useOrgStore } from '@/stores/org'
@@ -35,12 +36,10 @@ const filteredUsers = computed(() => {
 // 删除用户
 const deleteVisible = ref(false)
 const deleteTarget = ref<UserInfo | null>(null)
-const deleteAcknowledged = ref(false)
 const deleting = ref(false)
 
 function openDelete(user: UserInfo) {
     deleteTarget.value = user
-    deleteAcknowledged.value = false
     deleteVisible.value = true
 }
 
@@ -234,26 +233,12 @@ onMounted(async () => {
         </DataTable>
 
         <!-- 删除用户对话框 -->
-        <Dialog v-model:visible="deleteVisible" modal header="删除用户" :style="{ width: '26rem' }">
-            <p>
-                是否删除用户 <b>{{ deleteTarget?.name }}</b
-                >（{{ deleteTarget?.username }}）？
-            </p>
-            <div class="dialog-confirm">
-                <Checkbox v-model="deleteAcknowledged" input-id="delete-ack" binary />
-                <label for="delete-ack">我已知晓该操作不可恢复</label>
-            </div>
-            <template #footer>
-                <Button label="取消" severity="secondary" text @click="deleteVisible = false" />
-                <Button
-                    label="删除"
-                    severity="danger"
-                    :disabled="!deleteAcknowledged"
-                    :loading="deleting"
-                    @click="onDelete"
-                />
-            </template>
-        </Dialog>
+        <ConfirmDialog v-model="deleteVisible" :loading="deleting" @confirm="onDelete">
+            <!-- <p> -->
+            是否删除用户 <b>{{ deleteTarget?.name }}</b
+            >（{{ deleteTarget?.username }}）？
+            <!-- </p> -->
+        </ConfirmDialog>
     </main>
 </template>
 
@@ -268,13 +253,6 @@ onMounted(async () => {
         flex: 1;
         min-width: 14rem;
     }
-}
-
-.dialog-confirm {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 1.5em;
 }
 </style>
 
